@@ -1,0 +1,41 @@
+<div class="container mt-5" *ngIf="!loggedIn()" >
+  <!--<div *ngIf="!registerMode" style="text-align: center">-->
+  <div *ngIf="!registerMode" style="text-align: center" style="text-align: center">
+    <h1>Find your match</h1>
+    <p class="lead">Come on in to view your matches... All you need to do is sign up!</p>
+    <div *ngIf="!loggedIn()" class="text-center">
+      <button class="btn btn-primary btn-lg mr-2" (click)="registerToggle()">Register</button>
+      <button class="btn btn-info btn-lg">Learn more</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="registerMode && !loggedIn()" class="container">
+    <div class="row justify-content-center">
+      <div class="col-4">
+        <app-register (cancelRegister)="cancelRegisterMode($event)"></app-register>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mt-5">
+  <div *ngIf="loggedIn()" class="container">
+
+    <mat-form-field>
+      <input matInput [matDatepicker]="picker3" placeholder="Odaberite datum" [value]="date.value" (dateChange)="addEvent('change', $event)">
+      <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+      <mat-datepicker #picker3></mat-datepicker>
+    </mat-form-field>
+
+    <h1>{{activityTask.length}}</h1>
+    <div *ngFor="let item of activityTask">
+      <h2>{{item.ActivityTaskName}}</h2>
+      <h2>{{item.TimeFrom}}</h2>
+      <h2>{{item.Activity.ActivityName}}</h2>
+
+
+  </div>
+
+</div>
+

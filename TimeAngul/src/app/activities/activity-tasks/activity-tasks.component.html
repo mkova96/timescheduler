@@ -1,0 +1,23 @@
+<h4 class="dispaly-4">Order Food Item</h4>
+<hr>
+<form #form="ngForm" autocomplete="off" (submit)="onSubmit(form)">
+    <input type="hidden"  name="ActivityTaskId" #ActivityTaskId="ngModel" [(ngModel)]="formData.ActivityTaskId">
+    <input type="hidden"  name="ActivityId" #ActivityId="ngModel" [(ngModel)]="formData.ActivityId">
+  <input type="hidden"  name="ActivityTaskName" #ActivityTaskName="ngModel" [(ngModel)]="formData.ActivityTaskName">
+  <div class="form-group">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text bg-white">
+          <i class="fas fa-user-circle" [class.green-icon]="ActivityTaskName.valid" [class.red-icon]="ActivityTaskName.invalid && ActivityTaskName.touched"></i>
+        </div>
+      </div>
+      <input name="ActivityTaskName" #ActivityTaskName="ngModel" [(ngModel)]="formData.ActivityTaskName" class="form-control"
+        placeholder="Naziv boje" required>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <button type="submit" class="btn btn-dark"><i class="fa fa-database"></i> Submit</button>
+    <button type="button" class="btn btn-outline-dark ml-1" [mat-dialog-close]><i class="fa fa-close"></i> Close</button>
+  </div>
+</form>

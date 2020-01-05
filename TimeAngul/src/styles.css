@@ -1,0 +1,41 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+input.ng-touched.ng-invalid{
+    border-color: #dc3545;
+}
+
+input.ng-valid{
+    border-color: #28a745;
+}
+
+.green-icon{
+    color: #28a745;
+}
+.red-icon{
+    color: #dc3545;
+}
+
+#toast-container > div {
+    opacity:1;
+}
+
+table tr:hover{
+    cursor: pointer;
+}
+
+
+.jumbotron{
+    padding-top: 0px;
+    background: #fff;
+}
+
+.form-control,.input-group-text{
+    border:1px solid #0080ff;
+}
+
+table.table-hover tbody tr:hover{
+cursor: pointer;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
