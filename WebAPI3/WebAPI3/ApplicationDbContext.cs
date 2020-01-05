@@ -16,10 +16,11 @@ namespace WebAPI3
         public DbSet<ActivityColor> ActivityColor { get; set; }
         public DbSet<Activity> Activity { get; set; }
         public DbSet<ActivityStatus> ActivityStatus { get; set; }
-
         public DbSet<User> User { get; set; }
-
-        public DbSet<WebAPI3.Models.ActivityTask> ActivityTask { get; set; }
+        public DbSet<ActivityType> ActivityType { get; set; }
+        public DbSet<Schedule> Schedule { get; set; }
+        public DbSet<UserActivityType> UserActivityType { get; set; }
+        public DbSet<ActivityTask> ActivityTask { get; set; }
 
 
     }

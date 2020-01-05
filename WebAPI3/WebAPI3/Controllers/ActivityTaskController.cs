@@ -31,10 +31,12 @@ namespace WebAPI3.Controllers
         [HttpGet("{date}", Name = "GetTasksByDate")]
         public async Task<ActionResult<IEnumerable<ActivityTask>>> GetTasksByDate(int userId, string date)
         {
+            
             System.Diagnostics.Debug.WriteLine("POZVAN SAM s ovim vrijednostima:"+userId +"-"+date);
-            var x = _context.ActivityTask.Include(o=>o.Activity).ThenInclude(o=>o.User).AsEnumerable()
-                .Where(p=>p.ShortDate==date && p.Activity.User.UserId==userId).ToList();
-
+            var x = _context.ActivityTask.Include(o=>o.Activity).ThenInclude(o=>o.User).Include(a=>a.Schedule).AsEnumerable()
+                /*.Where(p=>p.ShortDate==date && p.Activity.User.UserId==userId)*/.ToList();
+            
+            
             System.Diagnostics.Debug.WriteLine("PRONASAO "+x.Count);
 
 

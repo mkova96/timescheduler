@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace WebAPI3.Models
 {
-    public class ActivityColor
+    public class ActivityType
     {
         [Key]
-        public int ActivityColorId { get; set; }
+        public int ActivityTypeId { get; set; }
 
         [Required]
-        public string ActivityColorName { get; set; }
+        public string ActivityTypeName { get; set; }
 
         public virtual ICollection<Activity> Activity { get; set; }
-
     }
 }

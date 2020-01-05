@@ -14,9 +14,16 @@ namespace WebAPI3.Models
 
         [Required]
         public string ActivityName { get; set; }
-        //public Nullable<int> ActivityStatusId { get; set; }
+        public Nullable<int> ActivityStatusId { get; set; }
+
+        [JsonIgnore]
         public virtual ActivityStatus ActivityStatus { get; set; }
-        
+
+        public Nullable<int> ActivityColorId { get; set; }
+
+        [JsonIgnore]
+        public virtual ActivityColor ActivityColor { get; set; }
+
         public Nullable<int> UserId { get; set; }
 
         [JsonIgnore]

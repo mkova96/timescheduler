@@ -16,6 +16,10 @@ namespace WebAPI3.Models
         [Required]
         public string ActivityTaskName { get; set; }
 
+        public int Duration { get; set; }
+
+        public string DonePercentage { get; set; }
+
         
         public Nullable<int> ActivityId { get; set; }
 
@@ -23,11 +27,10 @@ namespace WebAPI3.Models
 
         public virtual Activity Activity { get; set; }
 
-        [Required]
-        public DateTime TimeFrom { get; set; }
+        public virtual ICollection<Schedule> Schedule { get; set; }
 
-        [NotMapped]
-        public virtual string ShortDate =>TimeFrom.ToShortDateString();
+
+
 
     }
 }
