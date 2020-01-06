@@ -15,14 +15,17 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using WebAPI3.Seed;
 
 namespace WebAPI3
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        IWebHostEnvironment CurrentEnv;
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnv = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,12 +40,20 @@ namespace WebAPI3
                 o.JsonSerializerOptions.DictionaryKeyPolicy = null;
             });
 
-            services.AddDbContext<ApplicationDbContext>(options =>
+            if (this.CurrentEnv.IsEnvironment("Linux"))
+            {
+                services.AddDbContext<ApplicationDbContext>(options => options.UseInMemoryDatabase(databaseName: "Activities"));
+            }
+            else
+            {
+                services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("ActConnection")));
+            }
             services.AddCors();
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options => {
+                .AddJwtBearer(options =>
+                {
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
@@ -61,6 +72,12 @@ namespace WebAPI3
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+
+            if (env.IsEnvironment("Linux")) {
+                var context = app.ApplicationServices.GetService<ApplicationDbContext>();
+                var seedDb = new SeedDb(context);
+                seedDb.Run();
             }
 
             app.UseCors(options =>
