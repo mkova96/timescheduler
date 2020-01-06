@@ -25,20 +25,21 @@ namespace WebAPI3.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActivityType>>> GetActivityType()
         {
-            return await _context.ActivityType.Include(p=>p.Activity).ToListAsync();
+            return await _context.ActivityType.Include(p=>p.Activity)
+                .ThenInclude(i=>i.ActivityTask).ThenInclude(p=>p.Schedule).ToListAsync();
         }
 
         // GET: api/ActivityType/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityType>> GetActivityType(int id)
         {
-            var activityType = await _context.ActivityType.Include(a=>a.Activity).Where(a=>a.ActivityTypeId==id).FirstOrDefaultAsync();
+            var activityType = await _context.ActivityType.Include(p => p.Activity)
+                .ThenInclude(i => i.ActivityTask).ThenInclude(p => p.Schedule).Where(a=>a.ActivityTypeId==id).FirstOrDefaultAsync();
 
             if (activityType == null)
             {
                 return NotFound();
             }
-            System.Diagnostics.Debug.WriteLine("Uhvatio sam aktivnost" + activityType.ActivityTypeName);
 
             return activityType;
         }

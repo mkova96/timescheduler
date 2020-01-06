@@ -1,0 +1,18 @@
+<h1>STATISTIKA</h1>
+
+<h1>{{userActivityTypes.length}}</h1>
+<div *ngFor="let item of userActivityTypes">
+    <h1>Broj aktivnosti je {{item.ActivityType.Activity.length}}</h1>
+    <div *ngFor="let x of item.ActivityType.Activity">
+        <h1>broj zadataka aktivnosti {{x.ActivityName}} je {{x.ActivityTask.length}}</h1>
+        <div *ngFor="let y of x.ActivityTask">
+            <h1>{{y.Schedule.length}}</h1>
+            <div *ngFor="let z of y.Schedule">
+                <h1>{{z.TimeFrom}}-{{z.TimeTo}}</h1>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<h1>Ukupni broj zadataka za sve tipove aktivnosti je:{{numOfTasks}}</h1>

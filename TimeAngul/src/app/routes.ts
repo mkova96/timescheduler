@@ -6,6 +6,8 @@ import { UserEditComponent } from './user-edit/user-edit.component';
 import { UserEditResolver } from './_resolvers/user-edit.resolver';
 import { UserActivityResolver } from './_resolvers/user-activity.resolver';
 import { ActivityTypesComponent } from './activity-types/activity-types.component';
+import { Component } from '@angular/core';
+import { StatisticComponent } from './statistic/statistic.component';
 
 export const appRoutes: Routes = [
     {path: 'home', component: HomeComponent},
@@ -17,6 +19,7 @@ export const appRoutes: Routes = [
             {path: 'activities', component: ActivitiesComponent},
             {path:'user/edit',component:UserEditComponent,resolve :{user:UserEditResolver}},
             {path: 'activityTypes', component: ActivityTypesComponent},
+            {path:'statistics', component:StatisticComponent}
         ]
     },
     {path: '**', redirectTo: 'home', pathMatch: 'full'},

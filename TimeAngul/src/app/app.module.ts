@@ -29,6 +29,7 @@ import { RegisterComponent } from './register/register.component';
 import { RouterModule } from '@angular/router';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { ActivityTypesComponent } from './activity-types/activity-types.component';
+import { StatisticComponent } from './statistic/statistic.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { ActivityTypesComponent } from './activity-types/activity-types.componen
     RegisterComponent,
     NavComponent,
     UserEditComponent,
-    ActivityTypesComponent
+    ActivityTypesComponent,
+    StatisticComponent
   ],
   imports: [
     BrowserModule,

@@ -82,6 +82,7 @@ export class UserService {
     this.userActivityTypes.forEach(element => {
       this.http.get<ActivityType>(this.baseUrl + '/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityType = a);
       element.ActivityType=this.activityType;
+
       console.log("ime tipa je"+this.activityType.ActivityTypeName);
     });
     
