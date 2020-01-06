@@ -21,6 +21,8 @@ namespace WebAPI3.Models
         [Required]
         public string LastName { get; set; }
         public virtual ICollection<Activity> Activity { get; set; }
+        public virtual ICollection<UserActivityType> UserActivityType { get; set; }
+
 
     }
 }

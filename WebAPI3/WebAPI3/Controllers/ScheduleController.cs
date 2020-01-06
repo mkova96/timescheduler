@@ -21,14 +21,14 @@ namespace WebAPI3.Controllers
             _context = context;
         }
 
-        // GET: api/Schedule
+        // GET: api/Schedule ->RADI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedule()
         {
             return await _context.Schedule.ToListAsync();
         }
 
-        // GET: api/Schedule/5
+        // GET: api/Schedule/5 ->RADI
         [HttpGet("{id}")]
         public async Task<ActionResult<Schedule>> GetSchedule(int id)
         {
@@ -86,7 +86,7 @@ namespace WebAPI3.Controllers
             return CreatedAtAction("GetSchedule", new { id = schedule.ScheduleId }, schedule);
         }
 
-        // DELETE: api/Schedule/5
+        // DELETE: api/Schedule/5  ->RADI
         [HttpDelete("{id}")]
         public async Task<ActionResult<Schedule>> DeleteSchedule(int id)
         {

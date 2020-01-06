@@ -21,31 +21,23 @@ namespace WebAPI3.Controllers
             _context = context;
         }
 
-        /*// GET: api/Activity
+        // GET: api/Activity ->RADI
         [HttpGet(Name = "GetActivity")]
-        public async Task<ActionResult<IEnumerable<Activity>>> GetActivity(int userId)
+        public async Task<ActionResult<IEnumerable<Activity>>> GetActivity(int userId) //dodaj schedule na task
         {
-            System.Diagnostics.Debug.WriteLine("ide je "+userId);
-            //var x=await _context.Activity.Include(p=>p.ActivityTask)/*.Where(p => p.UserId == id)*///.ToListAsync();
-          /*  System.Diagnostics.Debug.WriteLine("velicina jee"+x.Count);
+            var x=await _context.Activity.Include(p=>p.ActivityTask).ThenInclude(p => p.Schedule).Include(i=>i.ActivityStatus)
+                .Include(a=>a.ActivityColor).Include(e=>e.User).Where(p => p.UserId == userId).ToListAsync();
 
-            foreach (Activity a in x)
-            {
-                foreach (ActivityTask y in a.ActivityTask)
-                {
-                    System.Diagnostics.Debug.WriteLine(y.TimeFrom.ToShortDateString());
-                }
-            }
             return x;
-        }*/
+        }
 
-        // GET: api/Activity/
+        // GET: api/Activity/  ->RADI
         [HttpGet("{activityId}",Name = "GetUserActivity")]
         public async Task<ActionResult<Activity>> GetUserActivity(int userId,int activityId)
         {
             System.Diagnostics.Debug.WriteLine("USOOO");
-            var x = await _context.Activity.Include(i=>i.ActivityTask).Include(o=>o.User)
-                .Where(o=>o.User.UserId==userId && o.ActivityId==activityId).FirstOrDefaultAsync();
+            var x = await _context.Activity.Include(i=>i.ActivityTask).ThenInclude(p=>p.Schedule)
+                .Include(o=>o.User).Include(a=>a.ActivityStatus).Include(e=>e.ActivityColor).Where(o=>o.User.UserId==userId && o.ActivityId==activityId).FirstOrDefaultAsync();
 
             System.Diagnostics.Debug.WriteLine(x.ActivityName);
 
@@ -97,7 +89,7 @@ namespace WebAPI3.Controllers
             return CreatedAtAction("GetActivity", new { id = activity.ActivityId }, activity);
         }
 
-        // DELETE: api/Activity/5
+        // DELETE: api/Activity/5  ->RADI
         [HttpDelete("{id}")]
         public async Task<ActionResult<Activity>> DeleteActivity(int id)
         {
@@ -107,8 +99,31 @@ namespace WebAPI3.Controllers
                 return NotFound();
             }
 
-            _context.Activity.Remove(activity);
-            await _context.SaveChangesAsync();
+            var z = _context.ActivityTask.Where(p => p.ActivityId == id).ToList();
+            foreach (var t in z)
+            {
+                var zy = _context.Schedule.Where(p => p.ActivityTaskId == t.ActivityTaskId).ToList();
+                foreach(var i in zy)
+                {
+                    _context.Schedule.Remove(i);
+                }
+                _context.SaveChanges();
+
+                _context.ActivityTask.Remove(t);
+            }
+            _context.SaveChanges();
+
+
+            try
+            {
+                _context.Activity.Remove(activity);
+                _context.SaveChanges();
+                System.Diagnostics.Debug.WriteLine("obrisano");
+            }
+            catch (Exception exc)
+            {
+                System.Diagnostics.Debug.WriteLine("PROBLEMI S BRISANJEM");
+            }
 
             return activity;
         }

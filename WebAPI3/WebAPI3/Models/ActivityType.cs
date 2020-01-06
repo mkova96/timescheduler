@@ -15,5 +15,7 @@ namespace WebAPI3.Models
         public string ActivityTypeName { get; set; }
 
         public virtual ICollection<Activity> Activity { get; set; }
+        public virtual ICollection<UserActivityType> UserActivityType { get; set; }
+
     }
 }

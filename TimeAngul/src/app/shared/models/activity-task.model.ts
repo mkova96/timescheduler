@@ -1,9 +1,14 @@
 import { Activity } from './activity.model';
+import { Schedule } from './schedule';
 
 export class ActivityTask {
     ActivityTaskId:number;
     ActivityTaskName:string;
-    TimeFrom:Date;
+    Duration:number;
+    DonePercentage:string;
+
     ActivityId: number;
     Activity:Activity;
+
+    Schedule:Schedule[];
 }

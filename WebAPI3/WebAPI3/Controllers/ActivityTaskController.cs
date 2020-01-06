@@ -21,36 +21,37 @@ namespace WebAPI3.Controllers
             _context = context;
         }
 
-        // GET: api/ActivityTask
+        // GET: api/ActivityTask -> RADI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActivityTask>>> GetActivityTask()
         {
-           return await _context.ActivityTask.ToListAsync();
+           return await _context.ActivityTask.Include(p=>p.Schedule).Include(i=>i.Activity).ToListAsync();
         }
 
+        /*//NIJE DOBROO
         [HttpGet("{date}", Name = "GetTasksByDate")]
         public async Task<ActionResult<IEnumerable<ActivityTask>>> GetTasksByDate(int userId, string date)
         {
             
             System.Diagnostics.Debug.WriteLine("POZVAN SAM s ovim vrijednostima:"+userId +"-"+date);
             var x = _context.ActivityTask.Include(o=>o.Activity).ThenInclude(o=>o.User).Include(a=>a.Schedule).AsEnumerable()
-                /*.Where(p=>p.ShortDate==date && p.Activity.User.UserId==userId)*/.ToList();
+                .Where(p=>p.ShortDate==date && p.Activity.User.UserId==userId).ToList();
             
             
             System.Diagnostics.Debug.WriteLine("PRONASAO "+x.Count);
 
 
             return x;
-        }
+        }*/
 
 
 
 
-        // GET: api/ActivityTask/5
-        /*[HttpGet("{id}")]
+        // GET: api/ActivityTask/5  -> RADI
+        [HttpGet("{id}")]
         public async Task<ActionResult<ActivityTask>> GetActivityTask(int id)
         {
-            var activityTask = await _context.ActivityTask.FindAsync(id);
+            var activityTask = await _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity).Where(p=>p.ActivityTaskId==id).FirstOrDefaultAsync();
 
             if (activityTask == null)
             {
@@ -58,7 +59,7 @@ namespace WebAPI3.Controllers
             }
 
             return activityTask;
-        }*/
+        }
 
         // PUT: api/ActivityTask/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
@@ -104,15 +105,22 @@ namespace WebAPI3.Controllers
             return CreatedAtAction("GetActivityTask", new { id = activityTask.ActivityTaskId }, activityTask);
         }
 
-        // DELETE: api/ActivityTask/5
+        // DELETE: api/ActivityTask/5  -> RADI
         [HttpDelete("{id}")]
         public async Task<ActionResult<ActivityTask>> DeleteActivityTask(int id)
         {
-            var activityTask = await _context.ActivityTask.FindAsync(id);
+            var activityTask = _context.ActivityTask.Include(p=>p.Schedule).Where(i=>i.ActivityTaskId==id).FirstOrDefault();
             if (activityTask == null)
             {
                 return NotFound();
             }
+
+            var z = _context.Schedule.Where(p => p.ActivityTaskId == id).ToList();
+            foreach (var t in z)
+            {
+                _context.Schedule.Remove(t);
+            }
+            _context.SaveChanges();
 
             _context.ActivityTask.Remove(activityTask);
             await _context.SaveChangesAsync();

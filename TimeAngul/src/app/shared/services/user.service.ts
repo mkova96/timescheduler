@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { Activity } from '../models/activity.model';
 import { ActivityTask } from '../models/activity-task.model';
+import { UserActivityType } from '../models/user-activity-type';
+import { ActivityType } from '../models/activity-type';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -20,6 +22,9 @@ export class UserService {
   activities:Activity[] = [];
   activity:Activity;
   activitytask:ActivityTask[]=[];
+
+  userActivityTypes:UserActivityType[]=[];
+  activityType:ActivityType;
 
   constructor(private http: HttpClient) {}
 
@@ -68,5 +73,20 @@ export class UserService {
     console.log(this.activity.ActivityName);
     return this.activity;
 
+  }
+
+  getUserActivityTypes(id) {
+    console.log("dobio sam:"+id);
+    this.http.get<UserActivityType[]>(this.baseUrl + '/user/' + id+'/activityType', httpOptions).subscribe(a => this.userActivityTypes = a);
+
+    this.userActivityTypes.forEach(element => {
+      this.http.get<ActivityType>(this.baseUrl + '/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityType = a);
+      element.ActivityType=this.activityType;
+      console.log("ime tipa je"+this.activityType.ActivityTypeName);
+    });
+    
+    console.log("dobio sam ovaj broj tipova:"+this.userActivityTypes.length);
+
+    return this.userActivityTypes;
   }
 }

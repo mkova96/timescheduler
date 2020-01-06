@@ -25,19 +25,20 @@ namespace WebAPI3.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActivityType>>> GetActivityType()
         {
-            return await _context.ActivityType.ToListAsync();
+            return await _context.ActivityType.Include(p=>p.Activity).ToListAsync();
         }
 
         // GET: api/ActivityType/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityType>> GetActivityType(int id)
         {
-            var activityType = await _context.ActivityType.FindAsync(id);
+            var activityType = await _context.ActivityType.Include(a=>a.Activity).Where(a=>a.ActivityTypeId==id).FirstOrDefaultAsync();
 
             if (activityType == null)
             {
                 return NotFound();
             }
+            System.Diagnostics.Debug.WriteLine("Uhvatio sam aktivnost" + activityType.ActivityTypeName);
 
             return activityType;
         }
@@ -86,7 +87,7 @@ namespace WebAPI3.Controllers
             return CreatedAtAction("GetActivityType", new { id = activityType.ActivityTypeId }, activityType);
         }
 
-        // DELETE: api/ActivityType/5
+        // DELETE: api/ActivityType/5  ---->RADI
         [HttpDelete("{id}")]
         public async Task<ActionResult<ActivityType>> DeleteActivityType(int id)
         {
@@ -95,8 +96,23 @@ namespace WebAPI3.Controllers
             {
                 return NotFound();
             }
+            var z = _context.UserActivityType.Where(p => p.ActivityTypeId == id).ToList();
+            foreach(var t in z)
+            {
+                _context.UserActivityType.Remove(t);
+            }
 
-            _context.ActivityType.Remove(activityType);
+            try
+            {
+                _context.ActivityType.Remove(activityType);
+                _context.SaveChanges();
+                System.Diagnostics.Debug.WriteLine("obrisano");
+            }
+            catch (Exception exc)
+            {
+                System.Diagnostics.Debug.WriteLine("Nemoguce obrisati jer neke aktivnosti sadrže taj tip");
+
+            }
             await _context.SaveChangesAsync();
 
             return activityType;

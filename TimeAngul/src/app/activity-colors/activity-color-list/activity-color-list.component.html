@@ -1,8 +1,0 @@
-<table class="table table-hover">
-    <tr *ngFor="let pd of service.list">
-      <td (click)="populateForm(pd)">{{pd.ActivityColorName}}</td>
-      <td>
-        <i class="far fa-trash-alt fa-lg text-danger" (click)="onDelete(pd.ActivityColorId)"></i>
-      </td>
-    </tr>
-  </table>
