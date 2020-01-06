@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  baseUrl = 'http://localhost:49947/api/auth/';
+  baseUrl = `${environment.apiURL}/auth/`;
   jwtHelper = new JwtHelperService();
   decodedToken: any;
 
@@ -28,8 +29,6 @@ export class AuthService {
           localStorage.setItem('token', user.token);
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           this.userId=this.decodedToken.nameid;
-          console.log(this.decodedToken);
-          console.log(this.decodedToken.nameid);
         }
       })
     );
@@ -38,5 +37,19 @@ export class AuthService {
   loggedIn() {
     const token = localStorage.getItem('token');
     return !this.jwtHelper.isTokenExpired(token);
+  }
+
+  getUserId():number | null {
+    if (this.userId) {
+      return this.userId;
+    }
+
+    const token = localStorage.getItem('token');
+    if (!token) {
+      return null;
+    }
+    this.decodedToken = this.jwtHelper.decodeToken(token);
+    this.userId=this.decodedToken.nameid;
+    return this.userId;
   }
 }
