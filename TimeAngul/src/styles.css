@@ -39,3 +39,15 @@ cursor: pointer;
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.section-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;    
+}
+
+.section-top h1 {
+    margin: 0;
+}

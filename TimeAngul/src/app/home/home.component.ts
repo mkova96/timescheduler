@@ -6,7 +6,7 @@ import { UserService } from "../shared/services/user.service";
 import { AuthService } from "../shared/services/auth.service";
 import { Activity } from "../shared/models/activity.model";
 import { ActivityTask } from "../shared/models/activity-task.model";
-import { environment } from "../../environments/environment";
+import { mockActivityTask } from "../mock/mock";
 
 @Component({
   selector: "app-home",
@@ -17,8 +17,7 @@ export class HomeComponent implements OnInit {
   registerMode = false;
   date = new FormControl(new Date());
   serializedDate = new FormControl(new Date().toISOString());
-  activityTask: ActivityTask[];
-  environment = environment;
+  activityTasks: ActivityTask[] = [mockActivityTask(), mockActivityTask()];
 
   todaysDate: string;
   selectedDate: string;
@@ -32,7 +31,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     if (this.authService.loggedIn()) {
       this.todaysDate = this.getDate(new Date().toDateString());
-      this.getTasksByDate(this.todaysDate);
+      // this.getTasksByDate(this.todaysDate);
     }
   }
 
@@ -49,27 +48,24 @@ export class HomeComponent implements OnInit {
   }
 
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.activityTask = [];
+    this.activityTasks = [];
     this.selectedDate = this.getDate(`${event.value}`);
     this.getTasksByDate(this.selectedDate);
   }
 
   getTasksByDate(date: string) {
-    console.log("pozivam s ovim datumom" + date);
-    this.activityTask = [];
-    this.activityTask = this.userService.getTasksByDate(
+    this.activityTasks = [];
+    this.activityTasks = this.userService.getTasksByDate(
       this.authService.getUserId(),
       date
     );
 
-    this.activityTask.forEach(e => {
+    this.activityTasks.forEach(e => {
       e.Activity = this.userService.getUserActivity(
         this.authService.decodedToken.nameid,
         e.ActivityId
       );
     });
-
-    console.log("velicina zadataka jeee: " + this.activityTask.length);
   }
 
   getDate(date: string) {

@@ -1,0 +1,20 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">{{ activity.ActivityName }}</h5>
+    <p class="card-text">
+      Status: {{ activity.ActivityStatus.ActivityStatusName }}
+    </p>
+    <a
+      routerLink="/activities/{{ activity.ActivityId }}"
+      class="btn btn-secondary"
+      style="margin-right: .5rem"
+      >Uredi
+    </a>
+    <a
+      href="#"
+      (click)="deleteActivity(); $event.preventDefault()"
+      class="btn btn-danger"
+      >Obriši</a
+    >
+  </div>
+</div>

@@ -1,8 +1,7 @@
-import { Activity } from './activity.model';
+import { Activity } from "./activity.model";
 
-export class ActivityColor {
-    ActivityColorId:number;
-    ActivityColorName:string;
-    Activity:Activity[];
-
+export interface ActivityColor {
+  ActivityColorId: number;
+  ActivityColorName: string;
+  // Activity: Activity[];
 }

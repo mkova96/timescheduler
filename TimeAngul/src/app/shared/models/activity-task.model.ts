@@ -1,14 +1,14 @@
-import { Activity } from './activity.model';
-import { Schedule } from './schedule';
+import { Activity } from "./activity.model";
+import { Schedule } from "./schedule";
 
-export class ActivityTask {
-    ActivityTaskId:number;
-    ActivityTaskName:string;
-    Duration:number;
-    DonePercentage:string;
+export interface ActivityTask {
+  ActivityTaskId: number;
+  ActivityTaskName: string;
+  Duration: number;
+  DonePercentage: string;
 
-    ActivityId: number;
-    Activity:Activity;
+  ActivityId: number;
+  Activity?: Activity;
 
-    Schedule:Schedule[];
+  Schedule: Schedule[];
 }

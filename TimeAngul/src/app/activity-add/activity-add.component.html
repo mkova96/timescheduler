@@ -1,0 +1,47 @@
+<div class="container mt-5">
+  <h1>Dodaj novu aktivnost</h1>
+  <form (submit)="submitForm(); $event.preventDefault()">
+    <div class="form-group">
+      <label for="activityName">Ime aktivnosti</label>
+      <input
+        type="text"
+        class="form-control"
+        id="activityName"
+        name="activityName"
+        [(ngModel)]="activity.ActivityName"
+        placeholder="Unesi ime aktivnosti"
+      />
+    </div>
+    <div class="form-group">
+      <label for="activityStatus">Status aktivnosti</label>
+      <select
+        class="form-control"
+        id="activityStatus"
+        name="activityStatus"
+        [(ngModel)]="activity.ActivityStatusId"
+      >
+        <option
+          *ngFor="let activityStatus of activityStatuses"
+          [value]="activityStatus.ActivityStatusId"
+          >{{ activityStatus.ActivityStatusName }}</option
+        >
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="activityColor">Boja aktivnosti</label>
+      <select
+        class="form-control"
+        id="activityColor"
+        name="activityColor"
+        [(ngModel)]="activity.ActivityColorId"
+      >
+        <option
+          *ngFor="let activityColor of activityColors"
+          [value]="activityColor.ActivityColorId"
+          >{{ activityColor.ActivityColorName }}</option
+        >
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+  </form>
+</div>

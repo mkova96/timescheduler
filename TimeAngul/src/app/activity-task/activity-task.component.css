@@ -1,0 +1,19 @@
+.activity-task {
+    position: relative;
+    margin-bottom: 1rem;
+    border-left: 10px solid;
+}
+
+.activity-task-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.activity-task-change {
+    background: #F7F7F7;
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    padding: 1rem;
+    margin-top: 1rem;
+}
