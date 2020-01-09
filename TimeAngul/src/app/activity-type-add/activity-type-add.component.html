@@ -1,0 +1,17 @@
+<div class="container mt-5">
+  <h1>Dodaj tip aktivnosti</h1>
+  <form (submit)="submitForm(); $event.preventDefault()">
+    <div class="form-group">
+      <label for="activityTypeName">Ime tipa aktivnosti</label>
+      <input
+        type="text"
+        class="form-control"
+        id="activityTypeName"
+        name="activityTypeName"
+        [(ngModel)]="activityType.ActivityTypeName"
+        placeholder="Unesi ime aktivnosti"
+      />
+    </div>
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+  </form>
+</div>

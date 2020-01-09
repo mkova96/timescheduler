@@ -1,16 +1,13 @@
-<h1>Moje aktivnosti</h1>
-<h2>{{activity.length}}</h2>
-<div *ngFor="let item of activity;let i=index;">
-    <h1>{{item.ActivityName}}</h1>
-    <div *ngFor="let z of item.ActivityTask">
-        <h2>{{z.ActivityTaskName}}</h2>
+<div class="container mt-5">
+  <div class="section-top">
+    <h1>Moje aktivnosti</h1>
+    <div>
+      <a routerLink="/activities/add" class="btn btn-secondary"
+        >Dodaj novu aktivnost</a
+      >
     </div>
-    <!--<h1>{{item.ActivityTask.length}}</h1>
-    -->
+  </div>
+  <div *ngFor="let activity of activity; let i = index">
+    <app-activity [activity]="activity"></app-activity>
+  </div>
 </div>
-
-    ActivityId: nu mber;
-    ActivityName:string;
-
-    ActivityStatusId: number;
-    UserId: number;

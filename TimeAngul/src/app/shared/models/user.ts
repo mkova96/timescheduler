@@ -1,5 +1,5 @@
-import { UserActivityType } from './user-activity-type';
-import { Activity } from './activity.model';
+import { UserActivityType } from "./user-activity-type";
+import { Activity } from "./activity.model";
 
 export interface User {
   UserId: number;
@@ -7,6 +7,6 @@ export interface User {
   FirstName: string;
   LastName: string;
 
-  Activity:Activity[];
-  UserActivityType:UserActivityType[];
+  // Activity:Activity[];
+  // UserActivityType: UserActivityType[];
 }

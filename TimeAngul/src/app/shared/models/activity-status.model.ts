@@ -1,8 +1,8 @@
-import { Activity } from './activity.model';
+import { Activity } from "./activity.model";
 
-export class ActivityStatus {
-     ActivityStatusId:number;
-     ActivityStatusName:string;
+export interface ActivityStatus {
+  ActivityStatusId: number;
+  ActivityStatusName: string;
 
-     Activity:Activity[];
+  Activity?: Activity[];
 }
