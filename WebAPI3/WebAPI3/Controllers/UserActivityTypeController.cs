@@ -29,8 +29,8 @@ namespace WebAPI3.Controllers
         }*/
 
         // GET:
-        [HttpGet(Name = "GetUserActivityType")]
-        public async Task<IEnumerable<UserActivityType>> GetUserActivityType(int userId)
+        [HttpGet(Name = "GetAllUserActivityType")]
+        public async Task<IEnumerable<UserActivityType>> GetAllUserActivityType(int userId)
         {
             System.Diagnostics.Debug.WriteLine("uso sam i dobio id korisnika: "+userId);
             var x = await _context.UserActivityType.Include(i => i.ActivityType).Include(o => o.User)
@@ -41,19 +41,14 @@ namespace WebAPI3.Controllers
             return x;
         }
 
-        /*// GET: api/UserActivityType/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserActivityType>> GetUserActivityType(int id)
+        // GET: api/UserActivityType/5
+        [HttpGet("{activityTypeId}",Name= "GetUserActivityType")]
+        public async Task<ActionResult<UserActivityType>> GetUserActivityType(int userId,int activityTypeId)
         {
-            var userActivityType = await _context.UserActivityType.FindAsync(id);
-
-            if (userActivityType == null)
-            {
-                return NotFound();
-            }
-
-            return userActivityType;
-        }*/
+            var x = await _context.UserActivityType.Include(i => i.ActivityType).Include(o => o.User)
+                .Where(o => o.UserId == userId && o.ActivityTypeId==activityTypeId).FirstOrDefaultAsync();
+            return x;
+        }
 
         // PUT: api/UserActivityType/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for

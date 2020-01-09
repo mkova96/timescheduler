@@ -7,6 +7,7 @@ import { Activity } from '../models/activity.model';
 import { ActivityTask } from '../models/activity-task.model';
 import { UserActivityType } from '../models/user-activity-type';
 import { ActivityType } from '../models/activity-type';
+import { ActivityTypeAddComponent } from 'src/app/activity-type-add/activity-type-add.component';
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -23,8 +24,11 @@ export class UserService {
   activity:Activity;
   activitytask:ActivityTask[]=[];
 
+  userActivityType:UserActivityType;
   userActivityTypes:UserActivityType[]=[];
+
   activityType:ActivityType;
+  activityTypes:ActivityType[]=[];
 
   constructor(private http: HttpClient) {}
 
@@ -75,19 +79,31 @@ export class UserService {
 
   }
 
-  getUserActivityTypes(id) {
-    console.log("dobio sam:"+id);
+  getAllUserActivityTypes(id) { /*RADI*/
+
     this.http.get<UserActivityType[]>(this.baseUrl + '/user/' + id+'/activityType', httpOptions).subscribe(a => this.userActivityTypes = a);
-
     this.userActivityTypes.forEach(element => {
-      this.http.get<ActivityType>(this.baseUrl + '/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityType = a);
-      element.ActivityType=this.activityType;
+      let actType:ActivityType;
 
-      console.log("ime tipa je"+this.activityType.ActivityTypeName);
+      this.http.get<ActivityType>(this.baseUrl + '/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityTypes.push(a));
     });
-    
-    console.log("dobio sam ovaj broj tipova:"+this.userActivityTypes.length);
 
+    for (var i=0;i<this.userActivityTypes.length;++i){
+      this.userActivityTypes[i].ActivityType=this.activityTypes[i];
+    }
+ 
     return this.userActivityTypes;
+  }
+
+  getUserActivityTypes(id1,id2) {
+    console.log("dobio sam:"+id1);
+    this.http.get<UserActivityType>(this.baseUrl + '/user/' + id1+'/activityType/'+id2, httpOptions).subscribe(a => this.userActivityType = a);
+
+    this.http.get<ActivityType>(this.baseUrl + '/activityType/' + this.userActivityType.ActivityTypeId, httpOptions).subscribe(a => this.activityType = a);
+    this.userActivityType.ActivityType=this.activityType;
+
+    console.log("ime tipa je"+this.activityType.ActivityTypeName);
+    
+    return this.userActivityType;
   }
 }

@@ -1,18 +1,32 @@
-<h1>STATISTIKA</h1>
-
-<h1>{{userActivityTypes.length}}</h1>
-<div *ngFor="let item of userActivityTypes">
-    <h1>Broj aktivnosti je {{item.ActivityType.Activity.length}}</h1>
-    <div *ngFor="let x of item.ActivityType.Activity">
-        <h1>broj zadataka aktivnosti {{x.ActivityName}} je {{x.ActivityTask.length}}</h1>
-        <div *ngFor="let y of x.ActivityTask">
-            <h1>{{y.Schedule.length}}</h1>
-            <div *ngFor="let z of y.Schedule">
-                <h1>{{z.TimeFrom}}-{{z.TimeTo}}</h1>
-            </div>
-
-        </div>
-
+<div *ngIf=activityTypes>
+    <h1>Dostupne aktivnosti su:</h1>
+    <div *ngFor="let item of activityTypes">
+        <h1>{{item.ActivityTypeName}}</h1>
     </div>
 </div>
-<h1>Ukupni broj zadataka za sve tipove aktivnosti je:{{numOfTasks}}</h1>
+
+<hr>
+
+
+<div *ngIf=userActivityType>
+    <h1>STATISTIKA ZA ID 2</h1>
+
+    <h1>Ukupni broj zadataka je:{{numOfTasks}}</h1>
+    <h1>Ukupni broj dovršenih zadataka je:{{numOfCompletedTasks}}</h1>
+    <h1>Ukupni broj budućih zadataka je:{{numOfFutureTasks}}</h1>
+
+    <h1>Ukupni broj obavljenih sati je:{{timeSpend}}</h1>
+    <h1>Ukupni broj potrebnih sati je:{{timeFuture}}</h1>
+</div>
+
+<!---<div>
+    <label>Summary: </label>
+    <select (change)="filterForeCasts($event.target.value)">
+      <option value="0">--All--</option>
+      <option *ngFor="let summary of summaries" value={{summary}}>
+        {{summary}}
+      </option>
+    </select>
+  </div>
+-->
+
