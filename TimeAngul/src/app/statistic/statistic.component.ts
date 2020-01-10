@@ -17,6 +17,10 @@ export class StatisticComponent implements OnInit {
   
   activityTypes:ActivityType[]=[];
 
+  statistics=[];
+  chachedStatistic=[];
+  
+
   numOfTasks:number=0;
   numOfCompletedTasks:number=0;
   numOfFutureTasks:number=0;
@@ -29,7 +33,7 @@ export class StatisticComponent implements OnInit {
 
   ngOnInit() {
     this.getAllUserActivityTypes(this.authService.decodedToken.nameid);
-    this.getUserActivityTypes(this.authService.decodedToken.nameid);
+    //this.getUserActivityTypes(this.authService.decodedToken.nameid);
   }
 
   getAllUserActivityTypes(id){ 
@@ -39,6 +43,49 @@ export class StatisticComponent implements OnInit {
     this.userActivityTypes.forEach(element => {
       this.activityTypes.push(element.ActivityType);
     });
+
+    this.activityTypes.forEach(element => {
+
+      this.numOfTasks=0;
+      this.numOfCompletedTasks=0;
+      this.numOfFutureTasks=0;
+
+      this.timeSpend=0;
+      this.timeFuture=0;
+
+      element.Activity.forEach(e => {
+        this.numOfTasks+=e.ActivityTask.length;
+        e.ActivityTask.forEach(z => {
+          var donePercentageArray=z.DonePercentage.split("/");
+          this.timeSpend+=Number(donePercentageArray[0]);
+          this.timeFuture+=Number(donePercentageArray[1])-Number(donePercentageArray[0]);
+
+          if (Number(donePercentageArray[0])===Number(donePercentageArray[1])){
+            this.numOfCompletedTasks+=1;
+          }else{
+            this.numOfFutureTasks+=1;
+          }
+        });
+      });
+      this.statistics.push({numOfTasks:this.numOfTasks,
+        numOfCompletedTasks:this.numOfCompletedTasks,
+        numOfFutureTasks:this.numOfFutureTasks,
+        timeSpend:this.timeSpend,
+        timeFuture:this.timeFuture,
+        statisticName:element.ActivityTypeName});
+
+
+    });
+
+    console.log("Velicina statistike je: "+this.statistics.length);
+
+    this.statistics.forEach(element => {
+      console.log(element);
+      this.chachedStatistic.push(element);
+
+    });
+    
+    
   }
 
   getUserActivityTypes(id){
@@ -64,11 +111,16 @@ export class StatisticComponent implements OnInit {
     console.log("velicina tipova jeee: "+this.userActivityType);
   }
 
-  /*filterForeCasts(filterVal: any) {
+  filterForeCasts(filterVal: any) {
     if (filterVal == "0")
-        this.forecasts = this.cacheForecasts;
+        this.statistics = this.chachedStatistic;
     else
-        this.forecasts = this.cacheForecasts.filter((item) => item.summary == filterVal);
-}*/
+        this.statistics = this.chachedStatistic.filter((item) => item.statisticName == filterVal);
+  }
 
-}
+  
+ }
+
+
+
+

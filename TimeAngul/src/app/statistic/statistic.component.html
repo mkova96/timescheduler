@@ -1,32 +1,33 @@
-<div *ngIf=activityTypes>
-    <h1>Dostupne aktivnosti su:</h1>
-    <div *ngFor="let item of activityTypes">
-        <h1>{{item.ActivityTypeName}}</h1>
+  <div class="container mt-5">
+    <div class="section-top">
+      <h1>
+        Statistika
+      </h1>
+      <div>
+        <select class="form-control form-control-sm" (change)="filterForeCasts($event.target.value)">
+          <option value="0">Svi tipovi aktivnosti</option>
+          <option *ngFor="let a of chachedStatistic" value={{a.statisticName}}>
+            {{a.statisticName}}
+          </option>
+        </select>
+      </div>
     </div>
-</div>
+    <div *ngFor="let s of statistics">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <h3>{{ s.statisticName}}</h3>
+          </h5>
+          <div class="card-text">
+            <h5>Broj dovršenih zadataka: {{s.numOfCompletedTasks}}</h5>
+            <h5>Broj budućih zadataka: {{s.numOfFutureTasks}}</h5>
+            <h5>Vrijeme potrošeno na zadatke: {{s.timeSpend}}h</h5>
+            <h5>Vrijeme koje je potrebno utrošiti na zadatke: {{s.timeFuture}}h</h5>
+          </div>
+        </div>
+      </div>
 
-<hr>
-
-
-<div *ngIf=userActivityType>
-    <h1>STATISTIKA ZA ID 2</h1>
-
-    <h1>Ukupni broj zadataka je:{{numOfTasks}}</h1>
-    <h1>Ukupni broj dovršenih zadataka je:{{numOfCompletedTasks}}</h1>
-    <h1>Ukupni broj budućih zadataka je:{{numOfFutureTasks}}</h1>
-
-    <h1>Ukupni broj obavljenih sati je:{{timeSpend}}</h1>
-    <h1>Ukupni broj potrebnih sati je:{{timeFuture}}</h1>
-</div>
-
-<!---<div>
-    <label>Summary: </label>
-    <select (change)="filterForeCasts($event.target.value)">
-      <option value="0">--All--</option>
-      <option *ngFor="let summary of summaries" value={{summary}}>
-        {{summary}}
-      </option>
-    </select>
+    </div>
   </div>
--->
+
 
