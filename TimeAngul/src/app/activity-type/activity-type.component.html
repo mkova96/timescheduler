@@ -4,7 +4,19 @@
       {{ userActivityType.ActivityType.ActivityTypeName }}
     </h5>
     <p class="card-text"></p>
-    <a routerLink="/activityTypes/{{ userActivityType.ActivityType.ActivityTypeId }}" class="btn btn-secondary" style="margin-right: .5rem">Uredi</a>
-    <a href="#" (click)="deleteActivityType(); $event.preventDefault()" class="btn btn-danger">Obriši</a>
+    <a
+      routerLink="/activityTypes/{{
+        userActivityType.ActivityType.ActivityTypeId
+      }}"
+      class="btn btn-secondary"
+      style="margin-right: .5rem"
+      ><i class="fas fa-pencil-alt mr-2"></i> Uredi</a
+    >
+    <a
+      href="#"
+      (click)="deleteActivityType(); $event.preventDefault()"
+      class="btn btn-danger"
+      ><i class="fas fa-trash mr-2"></i> Obriši</a
+    >
   </div>
 </div>

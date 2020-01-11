@@ -5,3 +5,8 @@ export interface ActivityType {
   ActivityTypeName: string;
   Activity?: Activity[];
 }
+
+export interface ActivityTypeForm {
+  ActivityTypeId?: number;
+  ActivityTypeName: string;
+}

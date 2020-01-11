@@ -1,0 +1,7 @@
+.task-details {
+    display: flex;
+    align-items: center;
+}
+.task-details .task-name {
+    flex: 1;
+}

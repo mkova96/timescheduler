@@ -40,6 +40,7 @@ import { ActivityEditComponent } from "./activity-edit/activity-edit.component";
 import { ActivityTypeComponent } from "./activity-type/activity-type.component";
 import { ActivityTypeAddComponent } from "./activity-type-add/activity-type-add.component";
 import { ActivityTypeEditComponent } from "./activity-type-edit/activity-type-edit.component";
+import { ActivityTaskItemComponent } from './activity-task-item/activity-task-item.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { ActivityTypeEditComponent } from "./activity-type-edit/activity-type-ed
     ActivityEditComponent,
     ActivityTypeComponent,
     ActivityTypeAddComponent,
-    ActivityTypeEditComponent
+    ActivityTypeEditComponent,
+    ActivityTaskItemComponent
   ],
   imports: [
     BrowserModule,
