@@ -5,7 +5,6 @@ import { ActivityStatus } from "../shared/models/activity-status.model";
 interface ActivityForm {
   ActivityName: string;
   ActivityColorId: number;
-  ActivityStatusId: number;
 }
 
 @Component({
@@ -18,10 +17,6 @@ export class ActivityAddComponent implements OnInit {
     { ActivityColorId: 1, ActivityColorName: "Black" },
     { ActivityColorId: 2, ActivityColorName: "Red" }
   ];
-  activityStatuses: ActivityStatus[] = [
-    { ActivityStatusId: 1, ActivityStatusName: "Done" },
-    { ActivityStatusId: 2, ActivityStatusName: "Not done" }
-  ];
   activity: ActivityForm;
 
   constructor() {}
@@ -29,8 +24,7 @@ export class ActivityAddComponent implements OnInit {
   ngOnInit() {
     this.activity = {
       ActivityName: "",
-      ActivityColorId: this.activityColors[0].ActivityColorId,
-      ActivityStatusId: this.activityStatuses[0].ActivityStatusId
+      ActivityColorId: this.activityColors[0].ActivityColorId
     };
   }
 

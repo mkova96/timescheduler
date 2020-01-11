@@ -47,7 +47,7 @@ export const mockActivityTask = (): ActivityTask => {
     Activity: mockActivity(),
     ActivityTaskId: 1,
     ActivityTaskName: "Task 1",
-    DonePercentage: "50%",
+    DonePercentage: "1/4",
     Duration: 5,
     Schedule: [mockSchedule(), mockSchedule()]
   };
