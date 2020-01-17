@@ -14,6 +14,8 @@ namespace WebAPI3.Models
 
         [Required]
         public string ActivityName { get; set; }
+
+        public DateTime DeadLine { get; set; }
         public Nullable<int> ActivityStatusId { get; set; }
 
         [JsonIgnore]
@@ -28,6 +30,11 @@ namespace WebAPI3.Models
 
         [JsonIgnore]
         public virtual User User { get; set; }
+
+        public Nullable<int> ActivityTypeId { get; set; }
+
+        [JsonIgnore]
+        public virtual ActivityType ActivityType { get; set; }
 
         public virtual ICollection<ActivityTask> ActivityTask { get; set; }
     }

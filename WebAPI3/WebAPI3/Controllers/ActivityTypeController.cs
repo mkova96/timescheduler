@@ -11,7 +11,7 @@ using WebAPI3.Models;
 namespace WebAPI3.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] //RADI SVE
     public class ActivityTypeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -26,14 +26,14 @@ namespace WebAPI3.Controllers
         public async Task<ActionResult<IEnumerable<ActivityType>>> GetActivityType()
         {
             return await _context.ActivityType.Include(p=>p.Activity)
-                .ThenInclude(i=>i.ActivityTask).ThenInclude(p=>p.Schedule).ToListAsync();
+                .ThenInclude(i=>i.ActivityTask).ThenInclude(p=>p.Schedule).Include(a=>a.UserActivityType).ToListAsync();
         }
 
         // GET: api/ActivityType/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ActivityType>> GetActivityType(int id)
         {
-            var activityType = await _context.ActivityType.Include(p => p.Activity)
+            var activityType = await _context.ActivityType.Include(a => a.UserActivityType).Include(p => p.Activity)
                 .ThenInclude(i => i.ActivityTask).ThenInclude(p => p.Schedule).Where(a=>a.ActivityTypeId==id).FirstOrDefaultAsync();
 
             if (activityType == null)

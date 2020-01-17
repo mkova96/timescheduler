@@ -27,8 +27,11 @@ export const mockActivity = (): Activity => {
     ActivityName: "Activity 1",
     ActivityStatus: mockActivityStatus(),
     ActivityStatusId: 1,
+    ActivityType:mockActivityType(),
+    ActivityTypeId:1,
     ActivityTask: [],
     User: mockUser(),
+    DeadLine:new Date(),
     UserId: 1
   };
 };
@@ -49,7 +52,7 @@ export const mockActivityTask = (): ActivityTask => {
     ActivityTaskName: "Task 1",
     DonePercentage: "1/4",
     Duration: 5,
-    Schedule: [mockSchedule(), mockSchedule()]
+    Schedule: [mockSchedule(), mockSchedule()],
   };
 };
 

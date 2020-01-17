@@ -79,20 +79,26 @@ export class UserService {
 
   }
 
-  getAllUserActivityTypes(id) { /*RADI*/
+  async getAllUserActivityTypes(id) { /*RADI*/
 
-    this.http.get<UserActivityType[]>(this.baseUrl + '/user/' + id+'/activityType', httpOptions).subscribe(a => this.userActivityTypes = a);
-    this.userActivityTypes.forEach(element => {
-      let actType:ActivityType;
+    const userActivityTypes = await this.http
+    .get<UserActivityType[]>(
+      this.baseUrl + "/user/" + id + "/activityType",
+      httpOptions
+    ).toPromise();
 
-      this.http.get<ActivityType>(this.baseUrl + '/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityTypes.push(a));
-    });
+    console.log(userActivityTypes);
 
-    for (var i=0;i<this.userActivityTypes.length;++i){
-      this.userActivityTypes[i].ActivityType=this.activityTypes[i];
-    }
- 
-    return this.userActivityTypes;
+  userActivityTypes.forEach(async (element,index) => {
+    userActivityTypes[index].ActivityType = await this.http
+      .get<ActivityType>(
+        this.baseUrl + "/activityType/" + element.ActivityTypeId,
+        httpOptions
+      ).toPromise();
+  });
+  console.log(userActivityTypes);
+
+  return userActivityTypes;
   }
 
   getUserActivityTypes(id1,id2) {

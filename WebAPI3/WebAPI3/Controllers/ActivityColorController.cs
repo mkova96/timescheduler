@@ -11,7 +11,7 @@ using WebAPI3.Models;
 namespace WebAPI3.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] //RADI SVE
     public class ActivityColorController : ControllerBase
     {
         private readonly ApplicationDbContext _context;

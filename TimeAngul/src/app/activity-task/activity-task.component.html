@@ -7,7 +7,7 @@
   <div class="card-body">
     <h5 class="card-title">{{ activityTask.ActivityTaskName }}</h5>
     <h6 class="card-subtitle mb-2 text-muted">
-      Dio aktivnosti {{ activityTask.Activity.ActivityName }}
+      Dio aktivnosti {{ activityTask.Activity.ActivityName }}, rok: {{activityTask.Activity.DeadLine.toDateString()}}
     </h6>
     <!-- <a
       href="#"
@@ -16,8 +16,8 @@
       >Pokaži / sakrij više informacija</a
     > -->
     <p class="card-text activity-task-details">
-      <span class="badge badge-dark mr-2">Traje {{ activityTask.Duration }} sati</span>
-      <span class="badge badge-dark">Napravljeno {{ activityTask.DonePercentage }}</span>
+      <span class="badge badge-dark">Napravljeno: {{ activityTask.DonePercentage }}</span>
+      <span class="badge badge-dark">Sljedeće događanje: <!--{{ activityTask.DonePercentage }}--></span>
     </p>
 
     <div class="additional-form activity-task-change" *ngIf="changing">

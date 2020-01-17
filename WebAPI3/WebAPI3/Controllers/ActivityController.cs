@@ -45,7 +45,7 @@ namespace WebAPI3.Controllers
         }
 
 
-        // PUT: api/Activity/5
+        // PUT: api/Activity/5 -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
@@ -77,16 +77,16 @@ namespace WebAPI3.Controllers
             return NoContent();
         }
 
-        // POST: api/Activity
+        // POST: api/Activity -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Activity>> PostActivity(Activity activity)
+        public async Task<ActionResult<Activity>> PostActivity(Activity activity,[FromRoute] string userId)
         {
             _context.Activity.Add(activity);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetActivity", new { id = activity.ActivityId }, activity);
+            return CreatedAtAction("GetUserActivity", new { userId = userId, activityId = activity.ActivityId }, activity);
         }
 
         // DELETE: api/Activity/5  ->RADI

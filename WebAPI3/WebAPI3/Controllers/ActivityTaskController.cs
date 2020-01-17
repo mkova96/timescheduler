@@ -10,7 +10,7 @@ using WebAPI3.Models;
 
 namespace WebAPI3.Controllers
 {
-    [Route("api/user/{userId}/task")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ActivityTaskController : ControllerBase
     {
@@ -25,30 +25,33 @@ namespace WebAPI3.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ActivityTask>>> GetActivityTask()
         {
-           return await _context.ActivityTask.Include(p=>p.Schedule).Include(i=>i.Activity).ToListAsync();
+           return await _context.ActivityTask.Include(p=>p.Schedule)
+                .Include(i=>i.Activity).ThenInclude(a=>a.ActivityColor)
+                .Include(i => i.Activity).ThenInclude(a => a.ActivityStatus)
+                .Include(i => i.Activity).ThenInclude(a => a.User)
+                .Include(i => i.Activity).ThenInclude(a => a.ActivityType).ToListAsync();
         }
 
-        /*//NIJE DOBROO
-        [HttpGet("{date}", Name = "GetTasksByDate")]
-        public async Task<ActionResult<IEnumerable<ActivityTask>>> GetTasksByDate(int userId, string date)
-        {
-            
-            System.Diagnostics.Debug.WriteLine("POZVAN SAM s ovim vrijednostima:"+userId +"-"+date);
-            var x = _context.ActivityTask.Include(o=>o.Activity).ThenInclude(o=>o.User).Include(a=>a.Schedule).AsEnumerable()
-                .Where(p=>p.ShortDate==date && p.Activity.User.UserId==userId).ToList();
-            
-            
-            System.Diagnostics.Debug.WriteLine("PRONASAO "+x.Count);
+        //RADI
+        [HttpGet("user/{userId}/date/{date}", Name = "GetTasksByDate")]
+         public async Task<ActionResult<IEnumerable<ActivityTask>>> GetTasksByDate(int userId, string date)
+         {
+           
+             var parsedDate = DateTime.Parse(date);
 
+            var z = _context.ActivityTask
+                .Include(t => t.Schedule)
+                .Where(p => p.Schedule.Any(a => a.Date.Month == parsedDate.Month && a.Date.Day == parsedDate.Day && a.Date.Year == parsedDate.Year))
+                .ToList();
 
-            return x;
-        }*/
+             return z;
+     }
 
 
 
 
         // GET: api/ActivityTask/5  -> RADI
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<ActionResult<ActivityTask>> GetActivityTask(int id)
         {
             var activityTask = await _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity).Where(p=>p.ActivityTaskId==id).FirstOrDefaultAsync();
@@ -61,10 +64,11 @@ namespace WebAPI3.Controllers
             return activityTask;
         }
 
-        // PUT: api/ActivityTask/5
+        // PUT: api/ActivityTask/5 -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
+
         public async Task<IActionResult> PutActivityTask(int id, ActivityTask activityTask)
         {
             if (id != activityTask.ActivityTaskId)
@@ -93,16 +97,16 @@ namespace WebAPI3.Controllers
             return NoContent();
         }
 
-        // POST: api/ActivityTask
+        // POST: api/ActivityTask -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<ActivityTask>> PostActivityTask(ActivityTask activityTask)
+        public async Task<ActionResult<ActivityTask>> PostActivityTask(ActivityTask activityTask,[FromRoute] string userId)
         {
             _context.ActivityTask.Add(activityTask);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetActivityTask", new { id = activityTask.ActivityTaskId }, activityTask);
+            return CreatedAtAction("GetActivityTask", new {userId=userId, id = activityTask.ActivityTaskId }, activityTask);
         }
 
         // DELETE: api/ActivityTask/5  -> RADI

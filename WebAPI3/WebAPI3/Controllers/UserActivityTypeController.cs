@@ -11,7 +11,7 @@ using WebAPI3.Models;
 namespace WebAPI3.Controllers
 {
     [Route("api/user/{userId}/activityType")]
-    [ApiController]
+    [ApiController] //RADI SVE
     public class UserActivityTypeController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -28,7 +28,7 @@ namespace WebAPI3.Controllers
             return await _context.UserActivityType.ToListAsync();
         }*/
 
-        // GET:
+        // GET: -> RADI
         [HttpGet(Name = "GetAllUserActivityType")]
         public async Task<IEnumerable<UserActivityType>> GetAllUserActivityType(int userId)
         {
@@ -41,7 +41,7 @@ namespace WebAPI3.Controllers
             return x;
         }
 
-        // GET: api/UserActivityType/5
+        // GET: api/UserActivityType/5 ->RADI
         [HttpGet("{activityTypeId}",Name= "GetUserActivityType")]
         public async Task<ActionResult<UserActivityType>> GetUserActivityType(int userId,int activityTypeId)
         {
@@ -86,12 +86,12 @@ namespace WebAPI3.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<UserActivityType>> PostUserActivityType(UserActivityType userActivityType)
+        public async Task<ActionResult<UserActivityType>> PostUserActivityType(UserActivityType userActivityType, [FromRoute] string userId)
         {
             _context.UserActivityType.Add(userActivityType);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetUserActivityType", new { id = userActivityType.UserActivityTypeId }, userActivityType);
+            return CreatedAtAction("GetUserActivityType", new { userId = userId, activityTypeId = userActivityType.UserActivityTypeId }, userActivityType);
         }
 
         // DELETE: api/UserActivityType/5

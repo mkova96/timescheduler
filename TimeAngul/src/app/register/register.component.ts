@@ -36,7 +36,7 @@ export class RegisterComponent implements OnInit {
     }, error => {
       this.toastr.error('Neuspješna prijava');
     },() => {
-      this.router.navigate(['/activities']);
+      this.router.navigate(['/activityTypes']);
     });
 
     console.log(this.model);

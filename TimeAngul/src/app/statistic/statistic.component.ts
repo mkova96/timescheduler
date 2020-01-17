@@ -31,20 +31,26 @@ export class StatisticComponent implements OnInit {
 
   constructor(private authService:AuthService,private userService:UserService) { }
 
-  ngOnInit() {
-    this.getAllUserActivityTypes(this.authService.decodedToken.nameid);
+ async  ngOnInit() {
+   await  this.getAllUserActivityTypes(this.authService.getUserId());
     //this.getUserActivityTypes(this.authService.decodedToken.nameid);
   }
 
-  getAllUserActivityTypes(id){ 
+  async getAllUserActivityTypes(id){ 
     this.userActivityTypes=[];
-    this.userActivityTypes=this.userService.getAllUserActivityTypes(id);
+    this.userActivityTypes=await this.userService.getAllUserActivityTypes(id);
+
+    console.log(JSON.stringify(this.userActivityTypes));
 
     this.userActivityTypes.forEach(element => {
+      console.log(JSON.stringify(element.ActivityType));
       this.activityTypes.push(element.ActivityType);
     });
 
+    console.log(this.activityTypes);
+
     this.activityTypes.forEach(element => {
+
 
       this.numOfTasks=0;
       this.numOfCompletedTasks=0;
@@ -52,6 +58,8 @@ export class StatisticComponent implements OnInit {
 
       this.timeSpend=0;
       this.timeFuture=0;
+
+      console.log(element.Activity.length);
 
       element.Activity.forEach(e => {
         this.numOfTasks+=e.ActivityTask.length;

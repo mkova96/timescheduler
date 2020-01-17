@@ -4,6 +4,9 @@
     <p class="card-text">
       Status: {{ activity.ActivityStatus.ActivityStatusName }}
     </p>
+    <p class="card-text">
+      Rok: {{ activity.DeadLine.toDateString() }}
+    </p>
     <a
       routerLink="/activities/{{ activity.ActivityId }}"
       class="btn btn-secondary"

@@ -23,5 +23,8 @@ namespace WebAPI3.Models
 
         [NotMapped]
         public virtual string ShortDate => Date.ToShortDateString();
+
+        [NotMapped]
+        public bool Done;
     }
 }

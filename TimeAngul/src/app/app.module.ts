@@ -41,6 +41,7 @@ import { ActivityTypeComponent } from "./activity-type/activity-type.component";
 import { ActivityTypeAddComponent } from "./activity-type-add/activity-type-add.component";
 import { ActivityTypeEditComponent } from "./activity-type-edit/activity-type-edit.component";
 import { ActivityTaskItemComponent } from './activity-task-item/activity-task-item.component';
+import { FilterPipe } from './filter.pipe';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { ActivityTaskItemComponent } from './activity-task-item/activity-task-it
     ActivityTypeComponent,
     ActivityTypeAddComponent,
     ActivityTypeEditComponent,
-    ActivityTaskItemComponent
+    ActivityTaskItemComponent,
+    FilterPipe
   ],
   imports: [
     BrowserModule,
@@ -76,7 +78,7 @@ import { ActivityTaskItemComponent } from './activity-task-item/activity-task-it
     MatNativeDateModule,
     MatFormFieldModule,
     MatInputModule
-  ],
+    ],
   entryComponents: [],
   providers: [
     ActivityColorService,
