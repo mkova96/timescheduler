@@ -10,7 +10,7 @@ using WebAPI3.Models;
 
 namespace WebAPI3.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user/{userId}/schedule")]
     [ApiController] //RADI SVE
     public class ScheduleController : ControllerBase
     {
@@ -23,16 +23,18 @@ namespace WebAPI3.Controllers
 
         // GET: api/Schedule ->RADI
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedule()
+        public async Task<ActionResult<IEnumerable<Schedule>>> GetSchedule([FromRoute] string userId)
         {
-            return await _context.Schedule.ToListAsync();
+            return await _context.Schedule.Include(a => a.ActivityTask).ThenInclude(i => i.Activity)
+                .Where(i => i.ActivityTask.Activity.UserId == Int32.Parse(userId)).ToListAsync();
         }
 
         // GET: api/Schedule/5 ->RADI
         [HttpGet("{id}")]
-        public async Task<ActionResult<Schedule>> GetSchedule(int id)
+        public async Task<ActionResult<Schedule>> GetSchedule([FromRoute] string userId,int id)
         {
-            var schedule = await _context.Schedule.FindAsync(id);
+            var schedule = await _context.Schedule.Include(a => a.ActivityTask).ThenInclude(i => i.Activity)
+                .Where(i => i.ActivityTask.Activity.UserId == Int32.Parse(userId)).Where(o=>o.ScheduleId==id).FirstOrDefaultAsync();
 
             if (schedule == null)
             {
@@ -46,12 +48,12 @@ namespace WebAPI3.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSchedule(int id, Schedule schedule)
+        public async Task<IActionResult> PutSchedule([FromRoute] string userId,int id, Schedule schedule)
         {
             if (id != schedule.ScheduleId)
             {
                 return BadRequest();
-            }
+            }      
 
             _context.Entry(schedule).State = EntityState.Modified;
 
@@ -78,12 +80,27 @@ namespace WebAPI3.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPost]
-        public async Task<ActionResult<Schedule>> PostSchedule(Schedule schedule)
+        public async Task<ActionResult<Schedule>> PostSchedule(Schedule schedule, [FromRoute] string userId)
         {
+            List<Schedule> schedules = _context.Schedule.Include(a => a.ActivityTask).ThenInclude(i => i.Activity).AsEnumerable()
+                .Where(i => i.ActivityTask.Activity.UserId == Int32.Parse(userId))
+                .Where(o=>o.Date.ToShortDateString()==schedule.Date.ToShortDateString()).ToList();
+
+            if (schedules.Any())
+            {
+                foreach (Schedule s in schedules)
+                {
+                    if (uTerminu(s.TimeFrom, s.TimeTo, schedule.TimeFrom, schedule.TimeTo))
+                    {
+                        throw new System.ArgumentException("Vec postoji zadatak u tom terminu");
+                    }
+                }
+            }
+
             _context.Schedule.Add(schedule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSchedule", new { id = schedule.ScheduleId }, schedule);
+            return CreatedAtAction("GetSchedule", new { userId = userId,id = schedule.ScheduleId }, schedule);
         }
 
         // DELETE: api/Schedule/5  ->RADI
@@ -105,6 +122,25 @@ namespace WebAPI3.Controllers
         private bool ScheduleExists(int id)
         {
             return _context.Schedule.Any(e => e.ScheduleId == id);
+        }
+        
+        private bool uTerminu(int f1,int t1,int f2,int t2) //prvi je fiksni
+        {
+            if (t2>t1 && t2 < f1)
+            {
+                return false;
+            }
+            else
+            {
+                if (f2>t1 && f2 < f1)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
         }
     }
 }

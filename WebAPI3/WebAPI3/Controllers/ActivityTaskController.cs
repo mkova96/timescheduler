@@ -103,6 +103,7 @@ namespace WebAPI3.Controllers
         [HttpPost]
         public async Task<ActionResult<ActivityTask>> PostActivityTask(ActivityTask activityTask,[FromRoute] string userId)
         {
+            activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
             _context.ActivityTask.Add(activityTask);
             await _context.SaveChangesAsync();
 
@@ -135,6 +136,56 @@ namespace WebAPI3.Controllers
         private bool ActivityTaskExists(int id)
         {
             return _context.ActivityTask.Any(e => e.ActivityTaskId == id);
+        }
+
+        [HttpPost("user/{userId}/auto", Name = "PostTaskAuto")] //RADI
+        public async Task<IActionResult> PostTaskAuto(ActivityTask activityTask, [FromRoute] string userId)
+        {
+            var activity = _context.Activity.Include(o=>o.User).Where(a => a.ActivityId == activityTask.ActivityId).FirstOrDefault();
+
+            var at = _context.UserActivityType.Include(a=>a.ActivityType).ThenInclude(a=>a.Activity)
+                .Where(a => a.ActivityTypeId == activity.ActivityTypeId && a.UserId== Int32.Parse(userId)).FirstOrDefault();
+
+            int maxDnevnoSati = at.TimeTo - at.TimeFrom;
+            int potrebno = activityTask.Duration;
+
+            DateTime day = DateTime.Today;
+
+            while (potrebno>0) {
+                string shortDay = day.ToShortDateString();
+                List<Schedule> schedules= _context.Schedule.Include(p=>p.ActivityTask).ThenInclude(a=>a.Activity).ThenInclude(o=>o.User)
+                    .AsEnumerable()
+                    .Where(a => a.Date.ToShortDateString() == shortDay && a.ActivityTask.Activity.UserId== Int32.Parse(userId)).ToList();
+
+                if (!schedules.Any()) //prazan raspored taj dan
+                {
+                    if (maxDnevnoSati >= potrebno) {
+                        Schedule newSchedule = new Schedule { TimeTo = at.TimeFrom+potrebno, TimeFrom = at.TimeFrom, Date = day, Moveable = false, Done = false };
+                        activityTask.Schedule.Add(newSchedule);
+
+                        _context.Schedule.Add(newSchedule);
+                        await _context.SaveChangesAsync();
+
+                        potrebno = 0;
+                        break;
+                    }
+                    else
+                    {
+                        Schedule newSchedule = new Schedule { TimeTo = at.TimeTo, TimeFrom = at.TimeFrom, Date = day, Moveable = false, Done = false };
+                        activityTask.Schedule.Add(newSchedule);
+                        _context.Schedule.Add(newSchedule);
+                        await _context.SaveChangesAsync();
+                        potrebno -= maxDnevnoSati;
+                    }
+                }
+                day = day.AddDays(1);
+            }
+            
+            activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
+            _context.ActivityTask.Add(activityTask);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetActivityTask", new { userId = userId, id = activityTask.ActivityTaskId }, activityTask);
         }
     }
 }
