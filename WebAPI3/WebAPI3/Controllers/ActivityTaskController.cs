@@ -209,6 +209,76 @@ namespace WebAPI3.Controllers
                     activityTask.ActiveSchedule.TimeWorked = timeTo - timeFrom;
                     activityTask.DonePercentage = (timeTo - timeFrom) + "/" + activityTask.Duration;
                 }
+                else
+                {
+                    activityTask.ActiveSchedule.TimeWorked = timeTo - timeFrom;
+                    activityTask.DonePercentage = (timeTo - timeFrom) + "/" + activityTask.Duration;
+
+                    var activity = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTask.ActivityId).FirstOrDefault();
+
+                    var at = _context.UserActivityType.Include(a => a.ActivityType).ThenInclude(a => a.Activity)
+                        .Where(a => a.ActivityTypeId == activity.ActivityTypeId && a.UserId == activity.UserId).FirstOrDefault();
+
+
+                    DateTime day = DateTime.Today;
+                    int potrebno = (activityTask.ActiveSchedule.TimeTo- activityTask.ActiveSchedule.TimeFrom) -activityTask.ActiveSchedule.TimeWorked;
+
+                    while (true)
+                    {
+                        string shortDay = day.ToShortDateString();
+                        List<Schedule> schedules = _context.Schedule.Include(p => p.ActivityTask).ThenInclude(a => a.Activity).ThenInclude(o => o.User)
+                            .AsEnumerable()
+                            .Where(a => a.Date.ToShortDateString() == shortDay && a.ActivityTask.Activity.UserId == activity.UserId).ToList();
+
+                        if (!schedules.Any()) //prazan raspored taj dan
+                        {
+
+                            Schedule newSchedule = new Schedule { TimeTo = activityTask.ActiveSchedule.TimeFrom + potrebno, TimeFrom =activityTask.ActiveSchedule.TimeFrom , Date = day, Moveable = false };
+                            activityTask.Schedule.Add(newSchedule);
+
+                            _context.Schedule.Add(newSchedule);
+                            await _context.SaveChangesAsync();
+
+                            break;
+                        }
+                        day = day.AddDays(1);
+                    }
+                }
+
+            }else
+            {
+                activityTask.ActiveSchedule.TimeWorked =0;
+
+                var activity = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTask.ActivityId).FirstOrDefault();
+
+                var at = _context.UserActivityType.Include(a => a.ActivityType).ThenInclude(a => a.Activity)
+                    .Where(a => a.ActivityTypeId == activity.ActivityTypeId && a.UserId == activity.UserId).FirstOrDefault();
+
+               
+                DateTime day = DateTime.Today;
+
+                while (true)
+                {
+                    string shortDay = day.ToShortDateString();
+                    List<Schedule> schedules = _context.Schedule.Include(p => p.ActivityTask).ThenInclude(a => a.Activity).ThenInclude(o => o.User)
+                        .AsEnumerable()
+                        .Where(a => a.Date.ToShortDateString() == shortDay && a.ActivityTask.Activity.UserId == activity.UserId).ToList();
+
+                    if (!schedules.Any()) //prazan raspored taj dan
+                    {
+                        
+                            Schedule newSchedule = new Schedule { TimeTo = activityTask.ActiveSchedule.TimeTo, TimeFrom = activityTask.ActiveSchedule.TimeFrom, Date = day, Moveable = false };
+                            activityTask.Schedule.Add(newSchedule);
+
+                            _context.Schedule.Add(newSchedule);
+                            await _context.SaveChangesAsync();
+
+                            break;
+                    }
+                    day = day.AddDays(1);
+                }
+
+
             }
 
 
