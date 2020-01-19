@@ -35,5 +35,6 @@ namespace WebAPI3.Models
          [NotMapped]
          public virtual Schedule NextOccurance => Schedule.Where(p=>DateTime.Compare(p.Date.Date,DateTime.Now.Date)>0).OrderBy(y=>y.Date).FirstOrDefault();
 
+
     }
 }

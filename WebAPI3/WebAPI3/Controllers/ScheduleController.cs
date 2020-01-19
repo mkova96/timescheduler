@@ -96,7 +96,6 @@ namespace WebAPI3.Controllers
                     }
                 }
             }
-
             _context.Schedule.Add(schedule);
             await _context.SaveChangesAsync();
 

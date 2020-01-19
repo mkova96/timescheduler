@@ -16,6 +16,7 @@ namespace WebAPI3.Models
         public int TimeFrom { get; set; }
         public int TimeTo { get; set; }
         public bool Moveable { get; set; }
+        public int TimeWorked { get; set; }
         public Nullable<int> ActivityTaskId { get; set; }
 
         [JsonIgnore]
@@ -25,6 +26,16 @@ namespace WebAPI3.Models
         public virtual string ShortDate => Date.ToShortDateString();
 
         [NotMapped]
-        public bool Done;
+        public virtual bool Done => IsDone();
+
+        public bool IsDone()
+        {
+            if (TimeWorked >= TimeTo - TimeFrom)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

@@ -160,7 +160,7 @@ namespace WebAPI3.Controllers
                 if (!schedules.Any()) //prazan raspored taj dan
                 {
                     if (maxDnevnoSati >= potrebno) {
-                        Schedule newSchedule = new Schedule { TimeTo = at.TimeFrom+potrebno, TimeFrom = at.TimeFrom, Date = day, Moveable = false, Done = false };
+                        Schedule newSchedule = new Schedule { TimeTo = at.TimeFrom+potrebno, TimeFrom = at.TimeFrom, Date = day, Moveable = false};
                         activityTask.Schedule.Add(newSchedule);
 
                         _context.Schedule.Add(newSchedule);
@@ -171,7 +171,7 @@ namespace WebAPI3.Controllers
                     }
                     else
                     {
-                        Schedule newSchedule = new Schedule { TimeTo = at.TimeTo, TimeFrom = at.TimeFrom, Date = day, Moveable = false, Done = false };
+                        Schedule newSchedule = new Schedule { TimeTo = at.TimeTo, TimeFrom = at.TimeFrom, Date = day, Moveable = false };
                         activityTask.Schedule.Add(newSchedule);
                         _context.Schedule.Add(newSchedule);
                         await _context.SaveChangesAsync();
@@ -186,6 +186,50 @@ namespace WebAPI3.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetActivityTask", new { userId = userId, id = activityTask.ActivityTaskId }, activityTask);
+        }
+
+
+        [HttpPut("updateWork/{id}")]
+
+        public async Task<IActionResult> UpdateActivityTaskWork([FromRoute] string id, string worked, int timeFrom, int timeTo)
+        {
+
+            var activityTask = await _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity)
+                .Where(p => p.ActivityTaskId == Int32.Parse(id)).FirstOrDefaultAsync();
+
+            if (activityTask==null)
+            {
+                return BadRequest();
+            }
+
+            if (worked == "yes")
+            {
+                if (timeFrom == activityTask.ActiveSchedule.TimeFrom && timeTo == activityTask.ActiveSchedule.TimeTo)
+                {
+                    activityTask.ActiveSchedule.TimeWorked = timeTo - timeFrom;
+                    activityTask.DonePercentage = (timeTo - timeFrom) + "/" + activityTask.Duration;
+                }
+            }
+
+
+            _context.Entry(activityTask).State = EntityState.Modified;
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ActivityTaskExists(Int32.Parse(id)))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
     }
 }
