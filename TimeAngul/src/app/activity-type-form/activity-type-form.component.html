@@ -1,0 +1,37 @@
+<div class="form-group">
+  <label for="activityTypeName">Ime tipa aktivnosti</label>
+  <input
+    type="text"
+    class="form-control"
+    id="activityTypeName"
+    name="activityTypeName"
+    [(ngModel)]="activityType.ActivityTypeName"
+    placeholder="Unesi ime aktivnosti"
+  />
+</div>
+<div class="form-group">
+  <label for="TimeFrom">Preferirano vrijeme početka</label>
+  <input
+    type="number"
+    class="form-control"
+    id="TimeFrom"
+    name="TimeFrom"
+    [(ngModel)]="activityType.TimeFrom"
+    placeholder="Unesi vrijeme početka"
+    min="0"
+    max="24"
+  />
+</div>
+<div class="form-group">
+  <label for="TimeTo">Preferirano vrijeme završetka</label>
+  <input
+    type="number"
+    class="form-control"
+    id="TimeTo"
+    name="TimeTo"
+    [(ngModel)]="activityType.TimeTo"
+    placeholder="Unesi vrijeme završetka"
+    min="0"
+    max="24"
+  />
+</div>

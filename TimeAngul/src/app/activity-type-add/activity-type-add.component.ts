@@ -7,17 +7,19 @@ import { ActivityType, ActivityTypeForm } from "../shared/models/activity-type";
   styleUrls: ["./activity-type-add.component.css"]
 })
 export class ActivityTypeAddComponent implements OnInit {
-  activityTypeForm: ActivityTypeForm;
+  activityType: ActivityTypeForm;
 
   constructor() {}
 
   ngOnInit() {
-    this.activityTypeForm = {
-      ActivityTypeName: ""
+    this.activityType = {
+      ActivityTypeName: "",
+      TimeFrom: 0,
+      TimeTo: 24
     };
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activityTypeForm);
+    console.log("Pošalji na api", this.activityType);
   }
 }

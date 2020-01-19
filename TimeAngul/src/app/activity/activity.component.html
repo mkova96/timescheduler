@@ -1,11 +1,8 @@
-<div class="card">
+<div class="card activity" [style.border-left-color]="color">
   <div class="card-body">
-    <h5 class="card-title">{{ activity.ActivityName }}</h5>
+    <h5 class="card-title">{{ activity.ActivityName }} <app-activity-status-badge [status]="activity.ActivityStatus.ActivityStatusName"></app-activity-status-badge></h5>
     <p class="card-text">
-      Status: {{ activity.ActivityStatus.ActivityStatusName }}
-    </p>
-    <p class="card-text">
-      Rok: {{ activity.DeadLine.toDateString() }}
+      <app-data-badge label="Rok" value="{{ activity.DeadLine | date }}"></app-data-badge>
     </p>
     <a
       routerLink="/activities/{{ activity.ActivityId }}"

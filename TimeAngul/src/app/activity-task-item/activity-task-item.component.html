@@ -1,10 +1,32 @@
 <div class="card">
-  <div class="card-body task-details">
+  <div class="card-body task-details" *ngIf="!editing">
     <div class="task-name">
       {{ activityTask.ActivityTaskName }}
     </div>
     <div class="task-actions">
-      <button class="btn btn-danger" (click)="deleteActivityTask()"><i class="fas fa-trash mr-2"></i> Obriši</button>
+      <button class="btn btn-secondary mr-2" (click)="edit()">
+        <i class="fas fa-pencil-alt mr-2"></i> Uredi
+      </button>
+      <button class="btn btn-danger" (click)="deleteActivityTask()">
+        <i class="fas fa-trash mr-2"></i> Obriši
+      </button>
     </div>
+  </div>
+  <div class="card-body" *ngIf="editing">
+    <form (submit)="save(); $event.preventDefault()">
+      <app-activity-task-form
+        [activityTask]="activityTaskForm"
+        [edit]="true"
+      ></app-activity-task-form>
+      <button class="btn btn-primary mr-2" type="submit">
+        <i class="fas fa-save mr-2"></i> Spremi
+      </button>
+      <button
+        class="btn btn-secondary"
+        (click)="cancelEditing(); $event.preventDefault()"
+      >
+        Odustani
+      </button>
+    </form>
   </div>
 </div>

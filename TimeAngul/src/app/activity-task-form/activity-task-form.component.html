@@ -1,0 +1,87 @@
+<div class="form-group">
+  <label for="activityName">Naziv</label>
+  <input
+    type="text"
+    class="form-control"
+    id="activityName"
+    name="activityName"
+    [(ngModel)]="activityTask.ActivityTaskName"
+    placeholder="Unesi naziv zadataka"
+  />
+</div>
+<div class="form-group" *ngIf="!edit">
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="taskType"
+      id="taskType2"
+      value="auto"
+      [(ngModel)]="activityTask.Type"
+    />
+    <label class="form-check-label" for="taskType2">
+      Automatski odredi raspored
+    </label>
+  </div>
+  <div class="additional-form mb-1" *ngIf="activityTask.Type === 'auto'">
+    <div class="form-group">
+      <label for="duration">Trajanje u satima</label>
+      <input
+        type="number"
+        class="form-control"
+        id="duration"
+        name="duration"
+        [(ngModel)]="activityTask.Duration"
+        placeholder="Unesi trajanje u satima"
+      />
+    </div>
+  </div>
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      name="taskType"
+      id="taskType1"
+      value="fixed"
+      [(ngModel)]="activityTask.Type"
+    />
+    <label class="form-check-label" for="taskType1">
+      Želim napraviti po fiksnom rasporedu
+    </label>
+  </div>
+  <div class="additional-form mb-1" *ngIf="activityTask.Type === 'fixed'">
+    <mat-form-field class="mr-2">
+      <input
+        matInput
+        [matDatepicker]="date1"
+        placeholder="Odaberi datum"
+        [value]="activityTask.FixedDate"
+        (dateChange)="setFixedData('change', $event)"
+      />
+      <mat-datepicker-toggle matSuffix [for]="date1"></mat-datepicker-toggle>
+      <mat-datepicker #date1></mat-datepicker>
+    </mat-form-field>
+    <div class="form-group">
+      <label for="TimeFrom">Vrijeme početka</label>
+      <input
+        type="number"
+        class="form-control"
+        id="TimeFrom"
+        name="TimeFrom"
+        [(ngModel)]="activityTask.TimeFrom"
+        placeholder="Unesi vrijeme početka"
+      />
+    </div>
+    <div class="form-group">
+      <label for="TimeTo">Vrijeme završetka</label>
+      <input
+        type="number"
+        class="form-control"
+        id="TimeTo"
+        name="TimeTo"
+        [(ngModel)]="activityTask.TimeTo"
+        placeholder="Unesi vrijeme završetka"
+      />
+    </div>
+  </div>
+</div>

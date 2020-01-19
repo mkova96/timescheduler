@@ -1,27 +1,24 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivityTask } from "../shared/models/activity-task.model";
-import { mockActivityTask, mockActivity } from "../mock/mock";
+import {
+  ActivityTask,
+  ActivityTaskForm,
+  TaskType
+} from "../shared/models/activity-task.model";
+import {
+  mockActivityTask,
+  mockActivity,
+  mockActivityTypeList,
+  mockColorList
+} from "../mock/mock";
 import { MatDatepickerInputEvent } from "@angular/material";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { switchMap } from "rxjs/operators";
+import { ActivityForm } from "../shared/models/activity.model";
+import { ActivityColor } from "../shared/models/activity-color.model";
+import { ActivityType } from "../shared/models/activity-type";
 
-interface ActivityEditForm {
-  ActivityName: string;
+interface ActivityEditForm extends ActivityForm {
   activityTasks: ActivityTask[];
-}
-
-enum TaskType {
-  Fixed = "fixed",
-  Auto = "auto"
-}
-
-interface ActivityTaskForm {
-  ActivityTaskName: string;
-  Type: TaskType;
-  TimeFrom?: number;
-  TimeTo?: number;
-  Duration: number;
-  FixedDate: Date;
 }
 
 const emptyActivityTask = (): ActivityTaskForm => {
@@ -39,6 +36,8 @@ const emptyActivityTask = (): ActivityTaskForm => {
   styleUrls: ["./activity-edit.component.css"]
 })
 export class ActivityEditComponent implements OnInit {
+  // private activityColors: ActivityColor[] = mockColorList();
+  // private activityTypes: ActivityType[] = mockActivityTypeList();
   private activity: ActivityEditForm;
 
   private creating: boolean = false;
@@ -54,7 +53,14 @@ export class ActivityEditComponent implements OnInit {
         const mockActivity_ = mockActivity();
         this.activity = {
           ActivityName: mockActivity_.ActivityName,
-          activityTasks: [mockActivityTask()]
+          ActivityColorId: mockActivity_.ActivityColor.ActivityColorId,
+          DeadLine: new Date(),
+          ActivityTypeId: mockActivity_.ActivityType.ActivityTypeId,
+          activityTasks: [
+            mockActivityTask(),
+            mockActivityTask(),
+            mockActivityTask()
+          ]
         };
       });
   }
@@ -75,5 +81,9 @@ export class ActivityEditComponent implements OnInit {
 
   setFixedData(type: string, event: MatDatepickerInputEvent<Date>) {
     this.newActivityTask.FixedDate = event.value;
+  }
+
+  submitForm() {
+    console.log("Pošalji na api", this.activity);
   }
 }
