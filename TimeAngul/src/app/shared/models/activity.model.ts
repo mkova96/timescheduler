@@ -2,12 +2,12 @@ import { ActivityTask } from "./activity-task.model";
 import { ActivityStatus } from "./activity-status.model";
 import { ActivityColor } from "./activity-color.model";
 import { User } from "./user";
-import { ActivityType } from './activity-type';
+import { ActivityType } from "./activity-type";
 
 export interface Activity {
   ActivityId: number;
   ActivityName: string;
-  DeadLine:Date;
+  DeadLine: Date;
 
   ActivityStatusId: number;
   ActivityStatus: ActivityStatus;
@@ -22,4 +22,11 @@ export interface Activity {
   User: User;
 
   ActivityTask: ActivityTask[];
+}
+
+export interface ActivityForm {
+  ActivityName: string;
+  ActivityColorId: number;
+  DeadLine: Date;
+  ActivityTypeId: number;
 }

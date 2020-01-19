@@ -1,0 +1,52 @@
+<div class="form-group">
+  <label for="activityName">Ime aktivnosti</label>
+  <input
+    type="text"
+    class="form-control"
+    id="activityName"
+    name="activityName"
+    [(ngModel)]="activity.ActivityName"
+    placeholder="Unesi ime aktivnosti"
+  />
+</div>
+<div class="form-group">
+  <label for="activityType">Vrsta aktivnosti</label>
+  <select
+    class="form-control"
+    id="activityType"
+    name="activityType"
+    [(ngModel)]="activity.activityTypeId"
+  >
+    <option
+      *ngFor="let activityType of activityTypes"
+      [value]="activityType.activityTypeId"
+      >{{ activityType.ActivityTypeName }}</option
+    >
+  </select>
+</div>
+<mat-form-field class="mr-2">
+  <input
+    matInput
+    [matDatepicker]="date1"
+    placeholder="Rok"
+    [value]="activity.DeadLine"
+    (dateChange)="activity.DeadLine = $event.value"
+  />
+  <mat-datepicker-toggle matSuffix [for]="date1"></mat-datepicker-toggle>
+  <mat-datepicker #date1></mat-datepicker>
+</mat-form-field>
+<div class="form-group">
+  <label for="activityColor">Boja aktivnosti</label>
+  <select
+    class="form-control"
+    id="activityColor"
+    name="activityColor"
+    [(ngModel)]="activity.ActivityColorId"
+  >
+    <option
+      *ngFor="let activityColor of activityColors"
+      [value]="activityColor.ActivityColorId"
+      >{{ activityColor.ActivityColorName }}</option
+    >
+  </select>
+</div>

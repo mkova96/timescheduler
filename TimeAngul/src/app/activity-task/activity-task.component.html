@@ -5,9 +5,13 @@
     </a>
   </div>
   <div class="card-body">
-    <h5 class="card-title">{{ activityTask.ActivityTaskName }}</h5>
+    <h5 class="card-title">
+      {{ activityTask.ActivityTaskName }}
+      ({{ activityTask.ActiveSchedule.TimeFrom }}:00 -
+      {{ activityTask.ActiveSchedule.TimeTo }}:00)
+    </h5>
     <h6 class="card-subtitle mb-2 text-muted">
-      Dio aktivnosti {{ activityTask.Activity.ActivityName }}, rok: {{activityTask.Activity.DeadLine.toDateString()}}
+      Dio aktivnosti {{ activityTask.Activity.ActivityName }}
     </h6>
     <!-- <a
       href="#"
@@ -16,8 +20,20 @@
       >Pokaži / sakrij više informacija</a
     > -->
     <p class="card-text activity-task-details">
-      <span class="badge badge-dark">Napravljeno: {{ activityTask.DonePercentage }}</span>
-      <span class="badge badge-dark">Sljedeće događanje: <!--{{ activityTask.DonePercentage }}--></span>
+      <app-data-badge
+        label="Napravljeno"
+        [value]="activityTask.DonePercentage"
+      ></app-data-badge>
+      <app-data-badge
+        label="Idući puta na rasporedu"
+        value="{{ activityTask.NextOccurance.Date | date }}"
+      >
+      </app-data-badge>
+      <app-data-badge
+        label="Rok"
+        value="{{ activityTask.Activity.DeadLine | date }}"
+      >
+      </app-data-badge>
     </p>
 
     <div class="additional-form activity-task-change" *ngIf="changing">
@@ -33,7 +49,7 @@
               [(ngModel)]="activityTaskForm.workedOnTask"
             />
             <label class="form-check-label" for="workedOnTask2">
-              Radio sam zadatak
+              Radio sam na zadatku
             </label>
           </div>
           <div
@@ -73,7 +89,7 @@
               [(ngModel)]="activityTaskForm.workedOnTask"
             />
             <label class="form-check-label" for="workedOnTask1">
-              Nisam napravio zadatak
+              Nisam radio na zadatku
             </label>
           </div>
         </div>

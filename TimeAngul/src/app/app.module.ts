@@ -41,7 +41,13 @@ import { ActivityTypeComponent } from "./activity-type/activity-type.component";
 import { ActivityTypeAddComponent } from "./activity-type-add/activity-type-add.component";
 import { ActivityTypeEditComponent } from "./activity-type-edit/activity-type-edit.component";
 import { ActivityTaskItemComponent } from './activity-task-item/activity-task-item.component';
-import { FilterPipe } from './filter.pipe';
+import { FilterPipe } from './_pipes/filter.pipe';
+import { ExtendDatePipe } from './_pipes/extendedDate.pipe';
+import { ActivityStatusBadgeComponent } from './activity-status-badge/activity-status-badge.component';
+import { ActivityFormComponent } from './activity-form/activity-form.component';
+import { DataBadgeComponent } from './data-badge/data-badge.component';
+import { ActivityTypeFormComponent } from './activity-type-form/activity-type-form.component';
+import { ActivityTaskFormComponent } from './activity-task-form/activity-task-form.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +67,13 @@ import { FilterPipe } from './filter.pipe';
     ActivityTypeAddComponent,
     ActivityTypeEditComponent,
     ActivityTaskItemComponent,
-    FilterPipe
+    FilterPipe,
+    ExtendDatePipe,
+    ActivityStatusBadgeComponent,
+    ActivityFormComponent,
+    DataBadgeComponent,
+    ActivityTypeFormComponent,
+    ActivityTaskFormComponent
   ],
   imports: [
     BrowserModule,

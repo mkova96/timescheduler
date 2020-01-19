@@ -23,4 +23,8 @@ export class ActivityComponent implements OnInit {
   deleteActivity() {
     console.log("Pošalji na api brisanje");
   }
+
+  get color() {
+    return this.activity.ActivityColor.ActivityColorName;
+  }
 }

@@ -1,9 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { switchMap } from "rxjs/operators";
-import { mockActivityType } from "../mock/mock";
+import { mockActivityType, mockUserActivityType } from "../mock/mock";
 import { ActivityType, ActivityTypeForm } from "../shared/models/activity-type";
 import { Activity } from "../shared/models/activity.model";
+import { UserActivityType } from '../shared/models/user-activity-type';
 
 @Component({
   selector: "app-activity-type-edit",
@@ -12,6 +13,7 @@ import { Activity } from "../shared/models/activity.model";
 })
 export class ActivityTypeEditComponent implements OnInit {
   private activityType: ActivityType;
+  private userActivityType: UserActivityType;
   private activityTypeForm: ActivityTypeForm;
   constructor(private route: ActivatedRoute) {}
 
@@ -23,8 +25,11 @@ export class ActivityTypeEditComponent implements OnInit {
       .pipe(switchMap((params: ParamMap) => params.get("id")))
       .subscribe(id => {
         this.activityType = mockActivityType();
+        this.userActivityType = mockUserActivityType();
         this.activityTypeForm = {
-          ActivityTypeName: this.activityType.ActivityTypeName
+          ActivityTypeName: this.activityType.ActivityTypeName,
+          TimeFrom: this.userActivityType.TimeFrom,
+          TimeTo: this.userActivityType.TimeTo,
         };
         this.activityTypeForm.ActivityTypeId = parseInt(id, 10);
       });

@@ -1,17 +1,7 @@
 <div class="container mt-5">
   <h1>Dodaj tip aktivnosti</h1>
   <form (submit)="submitForm(); $event.preventDefault()">
-    <div class="form-group">
-      <label for="activityTypeName">Ime tipa aktivnosti</label>
-      <input
-        type="text"
-        class="form-control"
-        id="activityTypeName"
-        name="activityTypeName"
-        [(ngModel)]="activityTypeForm.ActivityTypeName"
-        placeholder="Unesi ime aktivnosti"
-      />
-    </div>
+    <app-activity-type-form [activityType]="activityType"></app-activity-type-form>
     <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i> Spremi</button>
   </form>
 </div>

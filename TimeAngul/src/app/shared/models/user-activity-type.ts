@@ -11,5 +11,5 @@ export interface UserActivityType {
   User: User;
 
   ActivityTypeId: number;
-  ActivityType: ActivityType;
+  ActivityType?: ActivityType;
 }

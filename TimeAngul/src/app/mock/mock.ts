@@ -5,9 +5,25 @@ import { ActivityStatus } from "../shared/models/activity-status.model";
 import { ActivityColor } from "../shared/models/activity-color.model";
 import { ActivityTask } from "../shared/models/activity-task.model";
 import { Schedule } from "../shared/models/schedule";
+import { UserActivityType } from "../shared/models/user-activity-type";
+
+export const mockUserActivityType = (): UserActivityType => {
+  return {
+    UserActivityTypeId: 1,
+    ActivityTypeId: 1,
+    TimeFrom: 12,
+    TimeTo: 16,
+    User: mockUser(),
+    UserId: 1
+  };
+};
 
 export const mockActivityType = (): ActivityType => {
-  return { ActivityTypeId: 1, ActivityTypeName: "Tip aktivnosti" };
+  return {
+    ActivityTypeId: 1,
+    ActivityTypeName: "Fakultet",
+    UserActivityType: mockUserActivityType()
+  };
 };
 
 export const mockUser = (): User => {
@@ -24,14 +40,14 @@ export const mockActivity = (): Activity => {
     ActivityColor: mockColor(),
     ActivityColorId: 1,
     ActivityId: 1,
-    ActivityName: "Activity 1",
+    ActivityName: "Rad na projektu",
     ActivityStatus: mockActivityStatus(),
     ActivityStatusId: 1,
-    ActivityType:mockActivityType(),
-    ActivityTypeId:1,
+    ActivityType: mockActivityType(),
+    ActivityTypeId: 1,
     ActivityTask: [],
     User: mockUser(),
-    DeadLine:new Date(),
+    DeadLine: new Date(),
     UserId: 1
   };
 };
@@ -49,10 +65,12 @@ export const mockActivityTask = (): ActivityTask => {
     ActivityId: 1,
     Activity: mockActivity(),
     ActivityTaskId: 1,
-    ActivityTaskName: "Task 1",
+    ActivityTaskName: "Napraviti bazu podataka",
     DonePercentage: "1/4",
     Duration: 5,
     Schedule: [mockSchedule(), mockSchedule()],
+    NextOccurance: mockSchedule(),
+    ActiveSchedule: mockSchedule()
   };
 };
 
@@ -64,4 +82,27 @@ export const mockSchedule = (): Schedule => {
     TimeFrom: 10,
     TimeTo: 15
   };
+};
+
+// Lists for dropdowns
+export const mockColorList = (): ActivityColor[] => {
+  return [
+    { ActivityColorId: 1, ActivityColorName: "Black" },
+    { ActivityColorId: 2, ActivityColorName: "Red" }
+  ];
+};
+
+export const mockActivityTypeList = (): ActivityType[] => {
+  return [
+    {
+      ActivityTypeId: 1,
+      ActivityTypeName: "Fakultet",
+      UserActivityType: mockUserActivityType()
+    },
+    {
+      ActivityTypeId: 2,
+      ActivityTypeName: "Sport",
+      UserActivityType: mockUserActivityType()
+    }
+  ];
 };

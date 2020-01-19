@@ -1,11 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivityColor } from "../shared/models/activity-color.model";
 import { ActivityStatus } from "../shared/models/activity-status.model";
-
-interface ActivityForm {
-  ActivityName: string;
-  ActivityColorId: number;
-}
+import { ActivityForm } from '../shared/models/activity.model';
+import { ActivityType } from '../shared/models/activity-type';
+import { mockActivityTypeList, mockColorList } from '../mock/mock';
 
 @Component({
   selector: "app-activity-add",
@@ -13,18 +11,18 @@ interface ActivityForm {
   styleUrls: ["./activity-add.component.css"]
 })
 export class ActivityAddComponent implements OnInit {
-  activityColors: ActivityColor[] = [
-    { ActivityColorId: 1, ActivityColorName: "Black" },
-    { ActivityColorId: 2, ActivityColorName: "Red" }
-  ];
-  activity: ActivityForm;
+  private activityColors: ActivityColor[] = mockColorList();
+  private activityTypes: ActivityType[] = mockActivityTypeList();
+  private activity: ActivityForm;
 
   constructor() {}
 
   ngOnInit() {
     this.activity = {
       ActivityName: "",
-      ActivityColorId: this.activityColors[0].ActivityColorId
+      ActivityColorId: this.activityColors[0].ActivityColorId,
+      DeadLine: new Date(),
+      ActivityTypeId: this.activityTypes[0].ActivityTypeId
     };
   }
 
