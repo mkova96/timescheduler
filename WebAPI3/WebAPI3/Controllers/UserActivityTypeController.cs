@@ -10,7 +10,7 @@ using WebAPI3.Models;
 
 namespace WebAPI3.Controllers
 {
-    [Route("api/user/{userId}/activityType")]
+    [Route("api/user/{userId}/userActivityType")]
     [ApiController] //RADI SVE
     public class UserActivityTypeController : ControllerBase
     {

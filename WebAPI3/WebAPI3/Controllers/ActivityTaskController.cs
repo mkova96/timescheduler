@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI3;
+using WebAPI3.Dtos;
 using WebAPI3.Models;
 
 namespace WebAPI3.Controllers
@@ -67,7 +68,7 @@ namespace WebAPI3.Controllers
         // PUT: api/ActivityTask/5 -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
+        /*[HttpPut("{id}")]
 
         public async Task<IActionResult> PutActivityTask(int id, ActivityTask activityTask)
         {
@@ -95,12 +96,42 @@ namespace WebAPI3.Controllers
             }
 
             return NoContent();
+        }*/
+
+        [HttpPut("{id}")]
+
+        public async Task<IActionResult> PutActivityTask(int id, UpdateActivityTaskDto activityTaskDto)
+        {
+            var activityTask = _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity)
+                .Where(p => p.ActivityTaskId == id).FirstOrDefault();
+
+            activityTask.ActivityTaskName = activityTaskDto.ActivityTaskName;
+
+            _context.Entry(activityTask).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ActivityTaskExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
         }
 
         // POST: api/ActivityTask -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
+        /*[HttpPost]
         public async Task<ActionResult<ActivityTask>> PostActivityTask(ActivityTask activityTask,[FromRoute] string userId)
         {
             activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
@@ -108,6 +139,116 @@ namespace WebAPI3.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetActivityTask", new {userId=userId, id = activityTask.ActivityTaskId }, activityTask);
+        }*/
+
+        [HttpPost("user/{userId}/new")]
+        public async Task<ActionResult<ActivityTask>> PostActivityTask(ActivityTaskDto activityTaskDto, [FromRoute] string userId)
+        {
+
+
+            if (activityTaskDto.Type == "auto")
+            {
+                var activityTask = new ActivityTask();
+                activityTask.ActivityTaskName = activityTaskDto.ActivityTaskName;
+                activityTask.ActivityId = activityTaskDto.ActivityId;
+                activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
+                activityTask.Duration = activityTaskDto.Duration;
+
+                var act = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
+                activityTask.Activity = act;
+
+                _context.ActivityTask.Add(activityTask);
+                await _context.SaveChangesAsync();
+
+                var activity = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
+
+                var at = _context.UserActivityType.Include(a => a.ActivityType).ThenInclude(a => a.Activity)
+                    .Where(a => a.ActivityTypeId == activity.ActivityTypeId && a.UserId == Int32.Parse(userId)).FirstOrDefault();
+
+                int maxDnevnoSati = at.TimeTo - at.TimeFrom;
+                int potrebno = activityTaskDto.Duration;
+
+                DateTime day = DateTime.Today;
+
+                while (potrebno > 0)
+                {
+                    string shortDay = day.ToShortDateString();
+                    List<Schedule> schedules = _context.Schedule.Include(p => p.ActivityTask).ThenInclude(a => a.Activity).ThenInclude(o => o.User)
+                        .AsEnumerable()
+                        .Where(a => a.Date.ToShortDateString() == shortDay && a.ActivityTask.Activity.UserId == Int32.Parse(userId)).ToList();
+
+                    if (!schedules.Any()) //prazan raspored taj dan
+                    {
+                        if (maxDnevnoSati >= potrebno)
+                        {
+                            Schedule newSchedule = new Schedule
+                            {
+                                TimeTo = at.TimeFrom + potrebno,
+                                TimeFrom = at.TimeFrom,
+                                Date = day,
+                                Moveable = false,
+                                ActivityTask = activityTask,
+                                ActivityTaskId = activityTask.ActivityTaskId
+                            };
+
+                            //activityTask.Schedule.Add(newSchedule);
+
+
+                            _context.Schedule.Add(newSchedule);
+                            await _context.SaveChangesAsync();
+
+                            potrebno = 0;
+                            break;
+                        }
+                        else
+                        {
+
+                            Schedule newSchedule = new Schedule { TimeTo = at.TimeTo, TimeFrom = at.TimeFrom, Date = day, Moveable = false,
+                                ActivityTask = activityTask,
+                                ActivityTaskId = activityTask.ActivityTaskId
+                            };
+                            _context.Schedule.Add(newSchedule);
+                            await _context.SaveChangesAsync();
+                            potrebno -= maxDnevnoSati;
+                        }
+                    }
+                    day = day.AddDays(1);
+                }
+
+                return CreatedAtAction("GetActivityTask", new { userId = userId, id = activityTask.ActivityTaskId }, activityTask);
+            }
+            else
+            {
+                var activityTask = new ActivityTask();
+                activityTask.ActivityTaskName = activityTaskDto.ActivityTaskName;
+                activityTask.ActivityId = activityTaskDto.ActivityId;
+                activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
+                activityTask.Duration = activityTaskDto.TimeTo-activityTaskDto.TimeFrom;
+
+                var act = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
+                activityTask.Activity = act;
+
+                _context.ActivityTask.Add(activityTask);
+                await _context.SaveChangesAsync();
+
+                Schedule newSchedule = new Schedule
+                {
+                    TimeTo = activityTaskDto.TimeTo,
+                    TimeFrom = activityTaskDto.TimeFrom,
+                    Date = Convert.ToDateTime(activityTaskDto.FixedDate),
+                    Moveable = false,
+                    ActivityTask = activityTask,
+                    ActivityTaskId = activityTask.ActivityTaskId
+                };
+
+
+                _context.Schedule.Add(newSchedule);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetActivityTask", new { userId = userId, id = activityTask.ActivityTaskId }, activityTask);
+
+            }
+
         }
 
         // DELETE: api/ActivityTask/5  -> RADI
@@ -138,7 +279,7 @@ namespace WebAPI3.Controllers
             return _context.ActivityTask.Any(e => e.ActivityTaskId == id);
         }
 
-        [HttpPost("user/{userId}/auto", Name = "PostTaskAuto")] //RADI
+       /* [HttpPost("user/{userId}/auto", Name = "PostTaskAuto")] //RADI
         public async Task<IActionResult> PostTaskAuto(ActivityTask activityTask, [FromRoute] string userId)
         {
             var activity = _context.Activity.Include(o=>o.User).Where(a => a.ActivityId == activityTask.ActivityId).FirstOrDefault();
@@ -186,12 +327,12 @@ namespace WebAPI3.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetActivityTask", new { userId = userId, id = activityTask.ActivityTaskId }, activityTask);
-        }
+        }*/
 
 
         [HttpPut("updateWork/{id}")]
 
-        public async Task<IActionResult> UpdateActivityTaskWork([FromRoute] string id, string worked, int timeFrom, int timeTo)
+        public async Task<IActionResult> UpdateActivityTaskWork(UpdateWorkDto updateWorkDto,[FromRoute] string id)
         {
 
             var activityTask = await _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity)
@@ -202,17 +343,17 @@ namespace WebAPI3.Controllers
                 return BadRequest();
             }
 
-            if (worked == "yes")
+            if (updateWorkDto.worked == "yes")
             {
-                if (timeFrom == activityTask.ActiveSchedule.TimeFrom && timeTo == activityTask.ActiveSchedule.TimeTo)
+                if (updateWorkDto.timeFrom == activityTask.ActiveSchedule.TimeFrom && updateWorkDto.timeTo == activityTask.ActiveSchedule.TimeTo)
                 {
-                    activityTask.ActiveSchedule.TimeWorked = timeTo - timeFrom;
-                    activityTask.DonePercentage = (timeTo - timeFrom) + "/" + activityTask.Duration;
+                    activityTask.ActiveSchedule.TimeWorked = updateWorkDto.timeTo - updateWorkDto.timeFrom;
+                    activityTask.DonePercentage = (updateWorkDto.timeTo - updateWorkDto.timeFrom) + "/" + activityTask.Duration;
                 }
                 else
                 {
-                    activityTask.ActiveSchedule.TimeWorked = timeTo - timeFrom;
-                    activityTask.DonePercentage = (timeTo - timeFrom) + "/" + activityTask.Duration;
+                    activityTask.ActiveSchedule.TimeWorked = updateWorkDto.timeTo - updateWorkDto.timeFrom;
+                    activityTask.DonePercentage = (updateWorkDto.timeTo - updateWorkDto.timeFrom) + "/" + activityTask.Duration;
 
                     var activity = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTask.ActivityId).FirstOrDefault();
 
