@@ -23,6 +23,7 @@ export enum TaskType {
 
 export interface ActivityTaskForm {
   ActivityTaskId?: number;
+  ActivityId?: number;
   ActivityTaskName: string;
   Type?: TaskType;
   TimeFrom?: number;
