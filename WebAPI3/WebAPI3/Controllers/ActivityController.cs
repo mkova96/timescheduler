@@ -38,7 +38,7 @@ namespace WebAPI3.Controllers
         {
             System.Diagnostics.Debug.WriteLine("USOOO");
             var x = await _context.Activity.Include(i=>i.ActivityTask).ThenInclude(p=>p.Schedule)
-                .Include(o=>o.User).Include(a=>a.ActivityStatus).Include(e=>e.ActivityColor).Where(o=>o.User.UserId==userId && o.ActivityId==activityId).FirstOrDefaultAsync();
+                .Include(o=>o.User).Include(a=>a.ActivityStatus).Include(e=>e.ActivityColor).Include(o => o.ActivityType).Where(o=>o.User.UserId==userId && o.ActivityId==activityId).FirstOrDefaultAsync();
 
             System.Diagnostics.Debug.WriteLine(x.ActivityName);
 

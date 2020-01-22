@@ -1,16 +1,6 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { ActivityTask } from "../shared/models/activity-task.model";
-
-enum WorkedOnTask {
-  YES = "yes",
-  NO = "no"
-}
-
-interface ActivityTaskForm {
-  workedOnTask: WorkedOnTask;
-  timeFrom?: number;
-  timeTo?: number;
-}
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { ActivityTask, WorkedOnTask, ActivityTaskWorkedOnForm } from "../shared/models/activity-task.model";
+import { ActivityTaskService } from "../shared/services/activity-task.service";
 
 @Component({
   selector: "app-activity-task",
@@ -19,12 +9,13 @@ interface ActivityTaskForm {
 })
 export class ActivityTaskComponent implements OnInit {
   @Input() activityTask: ActivityTask;
+  @Output() updated = new EventEmitter<void>();
 
-  private activityTaskForm: ActivityTaskForm;
+  private activityTaskForm: ActivityTaskWorkedOnForm;
   detailsShown: boolean = false;
   changing: boolean = false;
 
-  constructor() {}
+  constructor(private activityTaskService: ActivityTaskService) {}
 
   ngOnInit() {}
 
@@ -39,11 +30,18 @@ export class ActivityTaskComponent implements OnInit {
   toggleChange() {
     this.changing = !this.changing;
     this.activityTaskForm = {
-      workedOnTask: WorkedOnTask.YES
+      ActivityTaskId: this.activityTask.ActivityTaskId,
+      workedOnTask: WorkedOnTask.YES,
+      timeFrom: 0,
+      timeTo: 24
     };
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activityTaskForm);
+    this.activityTaskService
+      .updateWork(this.activityTaskForm)
+      .subscribe(result => {
+        this.updated.emit()
+      });
   }
 }

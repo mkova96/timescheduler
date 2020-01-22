@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import {
   ActivityTask,
   ActivityTaskForm,
   TaskType
 } from "../shared/models/activity-task.model";
+import { ActivityTaskService } from '../shared/services/activity-task.service';
 
 @Component({
   selector: "app-activity-task-item",
@@ -12,30 +13,35 @@ import {
 })
 export class ActivityTaskItemComponent implements OnInit {
   @Input() activityTask: ActivityTask;
+  @Output() deleted = new EventEmitter<void>();
+
   private activityTaskForm: ActivityTaskForm;
   private editing: boolean = false;
 
-  constructor() {}
+  constructor(private activityTaskService: ActivityTaskService) {}
 
   ngOnInit() {}
 
   edit() {
     this.activityTaskForm = {
+      ActivityTaskId: this.activityTask.ActivityTaskId,
       ActivityTaskName: this.activityTask.ActivityTaskName
     };
     this.editing = true;
   }
   save() {
-    console.log("Send to api", this.activityTask);
-    // Mock edit
-    this.activityTask.ActivityTaskName = this.activityTaskForm.ActivityTaskName;
-    this.editing = false;
+    this.activityTaskService.update(this.activityTask).subscribe(result => {
+      this.activityTaskForm.ActivityTaskName = result.ActivityTaskName;
+      this.editing = false;
+    });
   }
   cancelEditing() {
     this.editing = false;
   }
 
   deleteActivityTask() {
-    console.log("Send to api to delete", this.activityTask);
+    this.activityTaskService.delete(this.activityTask.ActivityTaskId).subscribe(result => {
+      this.deleted.emit();
+    });
   }
 }

@@ -11,11 +11,13 @@ import {
   mockColorList
 } from "../mock/mock";
 import { MatDatepickerInputEvent } from "@angular/material";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { switchMap } from "rxjs/operators";
 import { ActivityForm } from "../shared/models/activity.model";
 import { ActivityColor } from "../shared/models/activity-color.model";
 import { ActivityType } from "../shared/models/activity-type";
+import { ActivityService } from "../shared/services/activity.service";
+import { ActivityTaskService } from '../shared/services/activity-task.service';
 
 interface ActivityEditForm extends ActivityForm {
   activityTasks: ActivityTask[];
@@ -26,7 +28,9 @@ const emptyActivityTask = (): ActivityTaskForm => {
     ActivityTaskName: "",
     Type: TaskType.Auto,
     Duration: 0,
-    FixedDate: new Date()
+    FixedDate: new Date(),
+    TimeFrom: 0,
+    TimeTo: 24
   };
 };
 
@@ -39,30 +43,43 @@ export class ActivityEditComponent implements OnInit {
   // private activityColors: ActivityColor[] = mockColorList();
   // private activityTypes: ActivityType[] = mockActivityTypeList();
   private activity: ActivityEditForm;
+  private activityId: number;
 
   private creating: boolean = false;
 
   private newActivityTask: ActivityTaskForm;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private activityService: ActivityService,
+    private activityTaskService: ActivityTaskService
+  ) {}
 
   ngOnInit() {
     this.route.paramMap
       .pipe(switchMap((params: ParamMap) => params.get("id")))
       .subscribe(id => {
-        const mockActivity_ = mockActivity();
-        this.activity = {
-          ActivityName: mockActivity_.ActivityName,
-          ActivityColorId: mockActivity_.ActivityColor.ActivityColorId,
-          DeadLine: new Date(),
-          ActivityTypeId: mockActivity_.ActivityType.ActivityTypeId,
-          activityTasks: [
-            mockActivityTask(),
-            mockActivityTask(),
-            mockActivityTask()
-          ]
-        };
+        this.activityId = parseInt(id, 10);
+        this.load();
       });
+  }
+
+  load(onlyTasks: boolean = false) {
+    this.activityService.get(this.activityId).subscribe(activity => {
+      if (onlyTasks) {
+        this.activity.activityTasks = activity.ActivityTask;
+      } else {
+        this.activity = {
+          ActivityId: activity.ActivityId,
+          ActivityName: activity.ActivityName,
+          ActivityColorId: activity.ActivityColor.ActivityColorId,
+          DeadLine: new Date(activity.DeadLine),
+          ActivityTypeId: activity.ActivityType.ActivityTypeId,
+          activityTasks: activity.ActivityTask
+        };
+      }
+    });
   }
 
   addNewActivityTask() {
@@ -75,8 +92,13 @@ export class ActivityEditComponent implements OnInit {
   }
 
   saveNewActivityTask() {
-    console.log("Send to api", this.newActivityTask);
-    this.creating = false;
+    this.activityTaskService.create(this.newActivityTask).subscribe(result => {
+      this.creating = false;
+    });
+  }
+
+  onTaskDeleted() {
+    this.load(true);
   }
 
   setFixedData(type: string, event: MatDatepickerInputEvent<Date>) {
@@ -84,6 +106,8 @@ export class ActivityEditComponent implements OnInit {
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activity);
+    this.activityService.update(this.activity).subscribe(result => {
+      this.router.navigate(["/activities"]);
+    });
   }
 }

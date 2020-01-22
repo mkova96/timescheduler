@@ -1,6 +1,8 @@
 <div class="card activity" [style.border-left-color]="color">
   <div class="card-body">
-    <h5 class="card-title">{{ activity.ActivityName }} <app-activity-status-badge [status]="activity.ActivityStatus.ActivityStatusName"></app-activity-status-badge></h5>
+    <h5 class="card-title">{{ activity.ActivityName }}
+      <app-activity-status-badge [status]="activity.ActivityStatus.ActivityStatusName"></app-activity-status-badge>
+    </h5>
     <p class="card-text">
       <app-data-badge label="Rok" value="{{ activity.DeadLine | date }}"></app-data-badge>
     </p>
@@ -8,13 +10,15 @@
       routerLink="/activities/{{ activity.ActivityId }}"
       class="btn btn-secondary"
       style="margin-right: .5rem"
-      ><i class="fas fa-pencil-alt mr-2"></i> Uredi
+      >
+      <i class="fas fa-pencil-alt mr-2"></i> Uredi
     </a>
     <a
       href="#"
       (click)="deleteActivity(); $event.preventDefault()"
       class="btn btn-danger"
-      ><i class="fas fa-trash mr-2"></i> Obriši</a
+      >
+      <i class="fas fa-trash mr-2"></i> Obriši</a
     >
   </div>
 </div>

@@ -14,6 +14,11 @@ namespace WebAPI3.Seed
             activityColor.ActivityColorName = "#333333";
             _context.ActivityColor.Add(activityColor);
             _context.SaveChanges();
+
+            var activityStatus = new ActivityStatus();
+            activityStatus.ActivityStatusName = "NotDone";
+            _context.ActivityStatus.Add(activityStatus);
+            _context.SaveChanges();
         }
     }
 }
