@@ -7,7 +7,7 @@
       >
     </div>
   </div>
-  <div *ngFor="let activity of activity; let i = index">
-    <app-activity [activity]="activity"></app-activity>
+  <div *ngFor="let activity of activities">
+    <app-activity [activity]="activity" (deleted)="onDeleted()"></app-activity>
   </div>
 </div>

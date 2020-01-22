@@ -1,5 +1,6 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, EventEmitter, Output } from "@angular/core";
 import { Activity } from "../shared/models/activity.model";
+import { ActivityService } from "../shared/services/activity.service";
 
 @Component({
   selector: "app-activity",
@@ -11,8 +12,9 @@ export class ActivityComponent implements OnInit {
 
   @Input() activity: Activity;
   @Input() showTasks: boolean;
+  @Output() deleted = new EventEmitter<void>();
 
-  constructor() {}
+  constructor(private activityService: ActivityService) {}
 
   ngOnInit() {}
 
@@ -21,7 +23,9 @@ export class ActivityComponent implements OnInit {
   }
 
   deleteActivity() {
-    console.log("Pošalji na api brisanje");
+    this.activityService.delete(this.activity.ActivityId).subscribe(result => {
+      this.deleted.emit();
+    });
   }
 
   get color() {

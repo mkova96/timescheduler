@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivityType, ActivityTypeForm } from "../shared/models/activity-type";
+import { ActivityTypeService } from "../shared/services/activity-type.service";
+import { Router } from '@angular/router';
 
 @Component({
   selector: "app-activity-type-add",
@@ -9,7 +11,10 @@ import { ActivityType, ActivityTypeForm } from "../shared/models/activity-type";
 export class ActivityTypeAddComponent implements OnInit {
   activityType: ActivityTypeForm;
 
-  constructor() {}
+  constructor(
+    private activityTypeService: ActivityTypeService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.activityType = {
@@ -20,6 +25,8 @@ export class ActivityTypeAddComponent implements OnInit {
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activityType);
+    this.activityTypeService.create(this.activityType).subscribe(result => {
+      this.router.navigate(['/activityTypes']);
+    });
   }
 }

@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5" *ngIf="activity">
   <h1>Uredi "{{ activity.ActivityName }}"</h1>
   <form
     (submit)="submitForm(); $event.preventDefault()"
@@ -40,12 +40,15 @@
       </form>
     </div>
   </div>
-  <p *ngIf="activity.activityTasks.length === 0">
+  <p *ngIf="!activity || activity.activityTasks.length === 0">
     Trenutno nema dodanih zadataka. Dodaj novi pritiskom na gumb ispod.
   </p>
-  <div class="mb-2" *ngFor="let activityTask of activity.activityTasks">
-    <app-activity-task-item
-      [activityTask]="activityTask"
-    ></app-activity-task-item>
-  </div>
+  <template *ngIf="activity">
+    <div class="mb-2" *ngFor="let activityTask of activity.activityTasks">
+      <app-activity-task-item
+        [activityTask]="activityTask"
+        (deleted)="onTaskDeleted()"
+      ></app-activity-task-item>
+    </div>
+  </template>
 </div>

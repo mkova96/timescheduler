@@ -8,6 +8,7 @@ import { ToastrService } from "ngx-toastr";
 import { Activity } from "../shared/models/activity.model";
 import { ActivityTask } from "../shared/models/activity-task.model";
 import { mockActivity, mockActivityTask } from "../mock/mock";
+import { ActivityService } from "../shared/services/activity.service";
 
 const activity1: Activity = mockActivity();
 const activityTask1: ActivityTask = mockActivityTask();
@@ -20,20 +21,21 @@ activity1.ActivityTask = [activityTask1];
   styles: []
 })
 export class ActivitiesComponent implements OnInit {
-  activity: Activity[] = [activity1];
+  activities: Activity[] = [];
 
-  constructor(
-    private route: ActivatedRoute,
-    private toastr: ToastrService,
-    private userService: UserService,
-    private authService: AuthService
-  ) {}
+  constructor(private activityService: ActivityService) {}
 
   ngOnInit() {
-    /*console.log("id je:"+this.authService.decodedToken.nameid);
-      this.userService.getUserActivity(this.authService.decodedToken.nameid);
-      
-      this.activity=this.userService.getUserActivity(this.authService.decodedToken.nameid);
-      console.log(this.activity.length);*/
+    this.load();
+  }
+
+  load() {
+    this.activityService.all().subscribe(activities => {
+      this.activities = activities;
+    });
+  }
+
+  onDeleted() {
+    this.load();
   }
 }

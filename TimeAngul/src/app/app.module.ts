@@ -48,6 +48,7 @@ import { ActivityFormComponent } from './activity-form/activity-form.component';
 import { DataBadgeComponent } from './data-badge/data-badge.component';
 import { ActivityTypeFormComponent } from './activity-type-form/activity-type-form.component';
 import { ActivityTaskFormComponent } from './activity-task-form/activity-task-form.component';
+import { httpInterceptorProviders } from './http-interceptors';
 
 @NgModule({
   declarations: [
@@ -97,7 +98,8 @@ import { ActivityTaskFormComponent } from './activity-task-form/activity-task-fo
     ActivityService,
     AuthService,
     AuthGuard,
-    UserEditResolver
+    UserEditResolver,
+    httpInterceptorProviders
   ],
   bootstrap: [AppComponent]
 })

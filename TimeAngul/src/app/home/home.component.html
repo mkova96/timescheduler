@@ -45,5 +45,6 @@
   <app-activity-task
     *ngFor="let activityTask of activityTasks"
     [activityTask]="activityTask"
+    (updated)="onUpdated()"
   ></app-activity-task>
 </div>

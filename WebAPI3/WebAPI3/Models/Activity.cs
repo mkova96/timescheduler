@@ -18,12 +18,10 @@ namespace WebAPI3.Models
         public DateTime DeadLine { get; set; }
         public Nullable<int> ActivityStatusId { get; set; }
 
-        [JsonIgnore]
         public virtual ActivityStatus ActivityStatus { get; set; }
 
         public Nullable<int> ActivityColorId { get; set; }
 
-        [JsonIgnore]
         public virtual ActivityColor ActivityColor { get; set; }
 
         public Nullable<int> UserId { get; set; }
@@ -33,7 +31,6 @@ namespace WebAPI3.Models
 
         public Nullable<int> ActivityTypeId { get; set; }
 
-        [JsonIgnore]
         public virtual ActivityType ActivityType { get; set; }
 
         public virtual ICollection<ActivityTask> ActivityTask { get; set; }

@@ -7,6 +7,7 @@ import { AuthService } from "../shared/services/auth.service";
 import { Activity } from "../shared/models/activity.model";
 import { ActivityTask } from "../shared/models/activity-task.model";
 import { mockActivityTask } from "../mock/mock";
+import { ActivityTaskService } from "../shared/services/activity-task.service";
 
 @Component({
   selector: "app-home",
@@ -17,7 +18,7 @@ export class HomeComponent implements OnInit {
   registerMode = false;
   date = new FormControl(new Date());
   serializedDate = new FormControl(new Date().toISOString());
-  activityTasks: ActivityTask[] = [mockActivityTask(), mockActivityTask()];
+  activityTasks: ActivityTask[] = [];
 
   todaysDate: string;
   selectedDate: string;
@@ -25,14 +26,28 @@ export class HomeComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private activityTaskService: ActivityTaskService
   ) {}
 
   ngOnInit() {
     if (this.authService.loggedIn()) {
       this.todaysDate = this.getDate(new Date().toDateString());
-      // this.getTasksByDate(this.todaysDate);
+      this.selectedDate = this.todaysDate;
+      this.load();
     }
+  }
+
+  load() {
+    this.activityTaskService
+      .allByDate(this.selectedDate)
+      .subscribe(activityTasks => {
+        this.activityTasks = activityTasks;
+      });
+  }
+
+  onUpdated() {
+    this.load();
   }
 
   registerToggle() {
@@ -50,23 +65,23 @@ export class HomeComponent implements OnInit {
   addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
     this.activityTasks = [];
     this.selectedDate = this.getDate(`${event.value}`);
-    this.getTasksByDate(this.selectedDate);
+    this.load();
   }
 
-  getTasksByDate(date: string) {
-    this.activityTasks = [];
-    this.activityTasks = this.userService.getTasksByDate(
-      this.authService.getUserId(),
-      date
-    );
+  // getTasksByDate(date: string) {
+  //   this.activityTasks = [];
+  //   this.activityTasks = this.userService.getTasksByDate(
+  //     this.authService.getUserId(),
+  //     date
+  //   );
 
-    this.activityTasks.forEach(e => {
-      e.Activity = this.userService.getUserActivity(
-        this.authService.decodedToken.nameid,
-        e.ActivityId
-      );
-    });
-  }
+  //   this.activityTasks.forEach(e => {
+  //     e.Activity = this.userService.getUserActivity(
+  //       this.authService.decodedToken.nameid,
+  //       e.ActivityId
+  //     );
+  //   });
+  // }
 
   getDate(date: string) {
     var f = date.split(" ");

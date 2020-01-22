@@ -1,10 +1,13 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, ParamMap } from "@angular/router";
+import { ActivatedRoute, ParamMap, Router } from "@angular/router";
 import { switchMap } from "rxjs/operators";
 import { mockActivityType, mockUserActivityType } from "../mock/mock";
 import { ActivityType, ActivityTypeForm } from "../shared/models/activity-type";
 import { Activity } from "../shared/models/activity.model";
-import { UserActivityType } from '../shared/models/user-activity-type';
+import { UserActivityType } from "../shared/models/user-activity-type";
+import { UserActivityTypeService } from "../shared/services/user-activity-type.service";
+import { ActivityTypeService } from "../shared/services/activity-type.service";
+import { forkJoin } from "rxjs";
 
 @Component({
   selector: "app-activity-type-edit",
@@ -15,7 +18,12 @@ export class ActivityTypeEditComponent implements OnInit {
   private activityType: ActivityType;
   private userActivityType: UserActivityType;
   private activityTypeForm: ActivityTypeForm;
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private userActivityTypeService: UserActivityTypeService,
+    private activityTypeService: ActivityTypeService
+  ) {}
 
   ngOnInit() {
     // this.activityTypeId = this.route.paramMap.pipe(
@@ -24,18 +32,26 @@ export class ActivityTypeEditComponent implements OnInit {
     this.route.paramMap
       .pipe(switchMap((params: ParamMap) => params.get("id")))
       .subscribe(id => {
-        this.activityType = mockActivityType();
-        this.userActivityType = mockUserActivityType();
-        this.activityTypeForm = {
-          ActivityTypeName: this.activityType.ActivityTypeName,
-          TimeFrom: this.userActivityType.TimeFrom,
-          TimeTo: this.userActivityType.TimeTo,
-        };
-        this.activityTypeForm.ActivityTypeId = parseInt(id, 10);
+        const actiivtyTypeId = parseInt(id, 10);
+        forkJoin([
+          this.activityTypeService.get(actiivtyTypeId),
+          this.userActivityTypeService.get(actiivtyTypeId)
+        ]).subscribe(([activityType, userActivityType]) => {
+          this.activityType = activityType;
+          this.userActivityType = userActivityType;
+          this.activityTypeForm = {
+            ActivityTypeName: this.activityType.ActivityTypeName,
+            TimeFrom: this.userActivityType.TimeFrom,
+            TimeTo: this.userActivityType.TimeTo
+          };
+          this.activityTypeForm.ActivityTypeId = actiivtyTypeId;
+        });
       });
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activityTypeForm);
+    this.activityTypeService.update(this.activityTypeForm).subscribe(result => {
+      this.router.navigate(["/activityTypes"]);
+    });
   }
 }

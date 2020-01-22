@@ -3,6 +3,8 @@ import { UserActivityType } from "../shared/models/user-activity-type";
 import { UserService } from "../shared/services/user.service";
 import { AuthService } from "../shared/services/auth.service";
 import { mockActivityType, mockUser } from "../mock/mock";
+import { ActivityTypeService } from "../shared/services/activity-type.service";
+import { UserActivityTypeService } from "../shared/services/user-activity-type.service";
 
 @Component({
   selector: "app-activity-types",
@@ -10,33 +12,21 @@ import { mockActivityType, mockUser } from "../mock/mock";
   styleUrls: []
 })
 export class ActivityTypesComponent implements OnInit {
-  userActivityTypes: UserActivityType[] = [
-    {
-      ActivityType: mockActivityType(),
-      ActivityTypeId: 1,
-      TimeFrom: 5,
-      TimeTo: 10,
-      UserActivityTypeId: 1,
-      UserId: 1,
-      User: mockUser(),
-    }
-  ];
+  userActivityTypes: UserActivityType[] = [];
 
-  constructor(
-    private userService: UserService,
-    private authService: AuthService
-  ) {}
+  constructor(private userActivityTypeService: UserActivityTypeService) {}
 
   ngOnInit() {
-    console.log("id korisnika jee:" + this.authService.getUserId());
-    this.getUserActivityTypes(this.authService.getUserId());
+    this.load();
   }
 
-  getUserActivityTypes(id) {
-    console.log("pozivam s ovim idom" + id);
-    // this.userActivityTypes = [];
-    // this.userActivityTypes = this.userService.getUserActivityTypes(id);
+  load() {
+    this.userActivityTypeService.all().subscribe(userActivityTypes => {
+      this.userActivityTypes = userActivityTypes;
+    });
+  }
 
-    console.log("velicina tipova jeee: " + this.userActivityTypes.length);
+  onDeleted() {
+    this.load();
   }
 }

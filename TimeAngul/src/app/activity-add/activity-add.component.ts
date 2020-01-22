@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivityColor } from "../shared/models/activity-color.model";
 import { ActivityStatus } from "../shared/models/activity-status.model";
-import { ActivityForm } from '../shared/models/activity.model';
-import { ActivityType } from '../shared/models/activity-type';
-import { mockActivityTypeList, mockColorList } from '../mock/mock';
+import { ActivityForm } from "../shared/models/activity.model";
+import { ActivityType } from "../shared/models/activity-type";
+import { mockActivityTypeList, mockColorList } from "../mock/mock";
+import { ActivityService } from "../shared/services/activity.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-activity-add",
@@ -15,7 +17,10 @@ export class ActivityAddComponent implements OnInit {
   private activityTypes: ActivityType[] = mockActivityTypeList();
   private activity: ActivityForm;
 
-  constructor() {}
+  constructor(
+    private router: Router,
+    private activityService: ActivityService
+  ) {}
 
   ngOnInit() {
     this.activity = {
@@ -27,6 +32,8 @@ export class ActivityAddComponent implements OnInit {
   }
 
   submitForm() {
-    console.log("Pošalji na api", this.activity);
+    this.activityService.create(this.activity).subscribe(result => {
+      this.router.navigate(["/activities"]);
+    });
   }
 }

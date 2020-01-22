@@ -14,7 +14,13 @@ export class ActivityStatusBadgeComponent implements OnInit {
 
   get badgeClass() {
     if (this.status === "Done") return "badge-success";
-    if (this.status === "Not done") return "badge-warning";
+    if (this.status === "NotDone") return "badge-warning";
     return "badge-secondary";
+  }
+
+  get text() {
+    if (this.status === "Done") return "Završena";
+    if (this.status === "NotDone") return "Nije završena";
+    return this.status;
   }
 }

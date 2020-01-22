@@ -25,6 +25,7 @@ export interface Activity {
 }
 
 export interface ActivityForm {
+  ActivityId?: number;
   ActivityName: string;
   ActivityColorId: number;
   DeadLine: Date;

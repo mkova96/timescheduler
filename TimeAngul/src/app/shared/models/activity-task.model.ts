@@ -22,10 +22,23 @@ export enum TaskType {
 }
 
 export interface ActivityTaskForm {
+  ActivityTaskId?: number;
   ActivityTaskName: string;
   Type?: TaskType;
   TimeFrom?: number;
   TimeTo?: number;
   Duration?: number;
   FixedDate?: Date;
+}
+
+export enum WorkedOnTask {
+  YES = "yes",
+  NO = "no"
+}
+
+export interface ActivityTaskWorkedOnForm {
+  ActivityTaskId: number;
+  workedOnTask: WorkedOnTask;
+  timeFrom?: number;
+  timeTo?: number;
 }
