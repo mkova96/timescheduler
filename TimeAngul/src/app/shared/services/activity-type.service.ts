@@ -9,10 +9,11 @@ import { ActivityTypeForm, ActivityType } from "../models/activity-type";
 })
 export class ActivityTypeService {
   baseUrl = environment.apiURL;
-  userId: number;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
-    this.userId = this.authService.getUserId();
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  get userId() {
+    return this.authService.getUserId();
   }
 
   all() {

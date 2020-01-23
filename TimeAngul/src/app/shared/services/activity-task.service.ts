@@ -2,17 +2,22 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { AuthService } from "./auth.service";
-import { ActivityTask, ActivityTaskForm, ActivityTaskWorkedOnForm } from "../models/activity-task.model";
+import {
+  ActivityTask,
+  ActivityTaskForm,
+  ActivityTaskWorkedOnForm
+} from "../models/activity-task.model";
 
 @Injectable({
   providedIn: "root"
 })
 export class ActivityTaskService {
   baseUrl = environment.apiURL;
-  userId: number;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
-    this.userId = this.authService.getUserId();
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  get userId() {
+    return this.authService.getUserId();
   }
 
   all() {
