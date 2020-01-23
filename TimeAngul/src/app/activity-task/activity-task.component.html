@@ -24,16 +24,16 @@
         label="Napravljeno"
         [value]="activityTask.DonePercentage"
       ></app-data-badge>
-      <app-data-badge
+      <ng-template *ngIf="activityTask.NextOccurance">
+        <app-data-badge
         label="Idući puta na rasporedu"
         value="{{ activityTask.NextOccurance.Date | date }}"
-      >
-      </app-data-badge>
+      ></app-data-badge>
+      </ng-template>
       <app-data-badge
         label="Rok"
         value="{{ activityTask.Activity.DeadLine | date }}"
-      >
-      </app-data-badge>
+      ></app-data-badge>
     </p>
 
     <div class="additional-form activity-task-change" *ngIf="changing">
@@ -47,7 +47,7 @@
               id="workedOnTask2"
               value="yes"
               [(ngModel)]="activityTaskForm.workedOnTask"
-            />
+/>
             <label class="form-check-label" for="workedOnTask2">
               Radio sam na zadatku
             </label>
@@ -65,7 +65,7 @@
                 name="timeFrom"
                 [(ngModel)]="activityTaskForm.timeFrom"
                 placeholder="Unesi vrijeme od"
-              />
+/>
             </div>
             <div class="form-group">
               <label for="timeTO">Vrijeme do</label>
@@ -76,7 +76,7 @@
                 name="timeTO"
                 [(ngModel)]="activityTaskForm.timeTo"
                 placeholder="Unesi vrijeme do"
-              />
+/>
             </div>
           </div>
           <div class="form-check">
@@ -87,7 +87,7 @@
               id="workedOnTask1"
               value="no"
               [(ngModel)]="activityTaskForm.workedOnTask"
-            />
+/>
             <label class="form-check-label" for="workedOnTask1">
               Nisam radio na zadatku
             </label>

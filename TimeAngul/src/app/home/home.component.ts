@@ -8,6 +8,8 @@ import { Activity } from "../shared/models/activity.model";
 import { ActivityTask } from "../shared/models/activity-task.model";
 import { mockActivityTask } from "../mock/mock";
 import { ActivityTaskService } from "../shared/services/activity-task.service";
+import { forkJoin } from 'rxjs';
+import { ActivityService } from '../shared/services/activity.service';
 
 @Component({
   selector: "app-home",
@@ -27,7 +29,8 @@ export class HomeComponent implements OnInit {
     private http: HttpClient,
     private userService: UserService,
     private authService: AuthService,
-    private activityTaskService: ActivityTaskService
+    private activityTaskService: ActivityTaskService,
+    private activityService: ActivityService
   ) {}
 
   ngOnInit() {
@@ -42,7 +45,13 @@ export class HomeComponent implements OnInit {
     this.activityTaskService
       .allByDate(this.selectedDate)
       .subscribe(activityTasks => {
-        this.activityTasks = activityTasks;
+        const requests = activityTasks.map(activityTask => this.activityService.get(activityTask.ActivityId));
+        forkJoin(requests).subscribe(results => {
+          results.forEach((activity, index) => {
+            activityTasks[index].Activity = activity;
+          });
+          this.activityTasks = activityTasks;
+        });
       });
   }
 

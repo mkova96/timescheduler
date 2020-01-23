@@ -17,17 +17,18 @@ import { ActivityForm } from "../shared/models/activity.model";
 import { ActivityColor } from "../shared/models/activity-color.model";
 import { ActivityType } from "../shared/models/activity-type";
 import { ActivityService } from "../shared/services/activity.service";
-import { ActivityTaskService } from '../shared/services/activity-task.service';
+import { ActivityTaskService } from "../shared/services/activity-task.service";
 
 interface ActivityEditForm extends ActivityForm {
   activityTasks: ActivityTask[];
 }
 
-const emptyActivityTask = (): ActivityTaskForm => {
+const emptyActivityTask = (activityId): ActivityTaskForm => {
   return {
+    ActivityId: activityId,
     ActivityTaskName: "",
     Type: TaskType.Auto,
-    Duration: 0,
+    Duration: 1,
     FixedDate: new Date(),
     TimeFrom: 0,
     TimeTo: 24
@@ -83,7 +84,7 @@ export class ActivityEditComponent implements OnInit {
   }
 
   addNewActivityTask() {
-    this.newActivityTask = emptyActivityTask();
+    this.newActivityTask = emptyActivityTask(this.activityId);
     this.creating = true;
   }
 
@@ -94,6 +95,7 @@ export class ActivityEditComponent implements OnInit {
   saveNewActivityTask() {
     this.activityTaskService.create(this.newActivityTask).subscribe(result => {
       this.creating = false;
+      this.load(true);
     });
   }
 

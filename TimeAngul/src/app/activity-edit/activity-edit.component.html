@@ -43,12 +43,13 @@
   <p *ngIf="!activity || activity.activityTasks.length === 0">
     Trenutno nema dodanih zadataka. Dodaj novi pritiskom na gumb ispod.
   </p>
-  <template *ngIf="activity">
+  <div *ngIf="activity">
     <div class="mb-2" *ngFor="let activityTask of activity.activityTasks">
       <app-activity-task-item
         [activityTask]="activityTask"
         (deleted)="onTaskDeleted()"
+        (updated)="onTaskDeleted()"
       ></app-activity-task-item>
     </div>
-  </template>
+  </div>
 </div>

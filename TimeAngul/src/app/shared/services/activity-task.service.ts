@@ -28,7 +28,7 @@ export class ActivityTaskService {
   }
 
   updateWork(activityTaskForm: ActivityTaskWorkedOnForm) {
-    return this.http.post(
+    return this.http.put(
       `${this.baseUrl}/ActivityTask/updateWork/${activityTaskForm.ActivityTaskId}`,
       activityTaskForm
     );

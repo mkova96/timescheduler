@@ -24,7 +24,6 @@ namespace WebAPI3.Models
         public Nullable<int> ActivityId { get; set; }
 
         [JsonIgnore]
-
         public virtual Activity Activity { get; set; }
 
         public virtual ICollection<Schedule> Schedule { get; set; }

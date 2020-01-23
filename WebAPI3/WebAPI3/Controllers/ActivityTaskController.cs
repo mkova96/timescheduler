@@ -162,6 +162,10 @@ namespace WebAPI3.Controllers
 
                 var activity = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
 
+                System.Console.WriteLine(userId);;
+                System.Console.WriteLine(Int32.Parse(userId));
+                System.Console.WriteLine(activityTaskDto);
+
                 var at = _context.UserActivityType.Include(a => a.ActivityType).ThenInclude(a => a.Activity)
                     .Where(a => a.ActivityTypeId == activity.ActivityTypeId && a.UserId == Int32.Parse(userId)).FirstOrDefault();
 

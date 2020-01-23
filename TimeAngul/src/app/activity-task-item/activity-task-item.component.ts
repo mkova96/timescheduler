@@ -14,6 +14,7 @@ import { ActivityTaskService } from '../shared/services/activity-task.service';
 export class ActivityTaskItemComponent implements OnInit {
   @Input() activityTask: ActivityTask;
   @Output() deleted = new EventEmitter<void>();
+  @Output() updated = new EventEmitter<void>();
 
   private activityTaskForm: ActivityTaskForm;
   private editing: boolean = false;
@@ -30,8 +31,8 @@ export class ActivityTaskItemComponent implements OnInit {
     this.editing = true;
   }
   save() {
-    this.activityTaskService.update(this.activityTask).subscribe(result => {
-      this.activityTaskForm.ActivityTaskName = result.ActivityTaskName;
+    this.activityTaskService.update(this.activityTaskForm).subscribe(result => {
+      this.updated.emit();
       this.editing = false;
     });
   }
