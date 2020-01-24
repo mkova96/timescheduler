@@ -14,10 +14,13 @@ export class ActivityTaskComponent implements OnInit {
   private activityTaskForm: ActivityTaskWorkedOnForm;
   detailsShown: boolean = false;
   changing: boolean = false;
+  date;
 
   constructor(private activityTaskService: ActivityTaskService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.date=(new Date());
+  }
 
   toggleDetails() {
     this.detailsShown = !this.detailsShown;

@@ -151,7 +151,7 @@ namespace WebAPI3.Controllers
                 var activityTask = new ActivityTask();
                 activityTask.ActivityTaskName = activityTaskDto.ActivityTaskName;
                 activityTask.ActivityId = activityTaskDto.ActivityId;
-                activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
+                activityTask.DonePercentage = "0/" + activityTaskDto.Duration.ToString();
                 activityTask.Duration = activityTaskDto.Duration;
 
                 var act = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
@@ -226,7 +226,7 @@ namespace WebAPI3.Controllers
                 var activityTask = new ActivityTask();
                 activityTask.ActivityTaskName = activityTaskDto.ActivityTaskName;
                 activityTask.ActivityId = activityTaskDto.ActivityId;
-                activityTask.DonePercentage = "0/" + activityTask.Duration.ToString();
+                activityTask.DonePercentage = "0/" + (activityTaskDto.TimeTo - activityTaskDto.TimeFrom).ToString();
                 activityTask.Duration = activityTaskDto.TimeTo-activityTaskDto.TimeFrom;
 
                 var act = _context.Activity.Include(o => o.User).Where(a => a.ActivityId == activityTaskDto.ActivityId).FirstOrDefault();
@@ -342,17 +342,28 @@ namespace WebAPI3.Controllers
             var activityTask = await _context.ActivityTask.Include(p => p.Schedule).Include(i => i.Activity)
                 .Where(p => p.ActivityTaskId == Int32.Parse(id)).FirstOrDefaultAsync();
 
+
             if (activityTask==null)
             {
                 return BadRequest();
             }
 
-            if (updateWorkDto.worked == "yes")
+            System.Diagnostics.Debug.WriteLine(activityTask.ActiveSchedule.TimeFrom + " "+activityTask.ActiveSchedule.TimeTo+ " "+
+                updateWorkDto.timeFrom+" "+updateWorkDto.timeTo);
+
+
+            if (updateWorkDto.workedOnTask == "yes")
             {
+                System.Diagnostics.Debug.WriteLine("uso1");
+
                 if (updateWorkDto.timeFrom == activityTask.ActiveSchedule.TimeFrom && updateWorkDto.timeTo == activityTask.ActiveSchedule.TimeTo)
                 {
+                    System.Diagnostics.Debug.WriteLine("ovdi");
+
                     activityTask.ActiveSchedule.TimeWorked = updateWorkDto.timeTo - updateWorkDto.timeFrom;
                     activityTask.DonePercentage = (updateWorkDto.timeTo - updateWorkDto.timeFrom) + "/" + activityTask.Duration;
+                    _context.Entry(activityTask).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
                 }
                 else
                 {
@@ -366,7 +377,7 @@ namespace WebAPI3.Controllers
 
 
                     DateTime day = DateTime.Today;
-                    int potrebno = (activityTask.ActiveSchedule.TimeTo- activityTask.ActiveSchedule.TimeFrom) -activityTask.ActiveSchedule.TimeWorked;
+                    int potrebno = (activityTask.ActiveSchedule.TimeTo - activityTask.ActiveSchedule.TimeFrom) - activityTask.ActiveSchedule.TimeWorked;
 
                     while (true)
                     {
@@ -378,7 +389,7 @@ namespace WebAPI3.Controllers
                         if (!schedules.Any()) //prazan raspored taj dan
                         {
 
-                            Schedule newSchedule = new Schedule { TimeTo = activityTask.ActiveSchedule.TimeFrom + potrebno, TimeFrom =activityTask.ActiveSchedule.TimeFrom , Date = day, Moveable = false };
+                            Schedule newSchedule = new Schedule { TimeTo = activityTask.ActiveSchedule.TimeFrom + potrebno, TimeFrom = activityTask.ActiveSchedule.TimeFrom, Date = day, Moveable = false };
                             activityTask.Schedule.Add(newSchedule);
 
                             _context.Schedule.Add(newSchedule);

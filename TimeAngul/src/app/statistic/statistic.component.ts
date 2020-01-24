@@ -36,21 +36,19 @@ export class StatisticComponent implements OnInit {
     //this.getUserActivityTypes(this.authService.decodedToken.nameid);
   }
 
-  async getAllUserActivityTypes(id){ 
+  getAllUserActivityTypes(id){ 
     this.userActivityTypes=[];
-    this.userActivityTypes=await this.userService.getAllUserActivityTypes(id);
+    this.userActivityTypes=this.userService.getAllUserActivityTypes(id);
 
-    console.log(JSON.stringify(this.userActivityTypes));
+    console.log("ove tipove tu imam1",this.userActivityTypes);
 
     this.userActivityTypes.forEach(element => {
-      console.log(JSON.stringify(element.ActivityType));
       this.activityTypes.push(element.ActivityType);
+
+      console.log("Aktivnost",element.ActivityType.Activity.length);
     });
 
-    console.log(this.activityTypes);
-
     this.activityTypes.forEach(element => {
-
 
       this.numOfTasks=0;
       this.numOfCompletedTasks=0;
@@ -58,8 +56,6 @@ export class StatisticComponent implements OnInit {
 
       this.timeSpend=0;
       this.timeFuture=0;
-
-      console.log(element.Activity.length);
 
       element.Activity.forEach(e => {
         this.numOfTasks+=e.ActivityTask.length;
@@ -95,6 +91,7 @@ export class StatisticComponent implements OnInit {
     
     
   }
+
 
   getUserActivityTypes(id){
 

@@ -33,6 +33,7 @@ export class ActivityTaskService {
   }
 
   updateWork(activityTaskForm: ActivityTaskWorkedOnForm) {
+    console.log("saljem",activityTaskForm);
     return this.http.put(
       `${this.baseUrl}/ActivityTask/updateWork/${activityTaskForm.ActivityTaskId}`,
       activityTaskForm

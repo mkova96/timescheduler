@@ -56,7 +56,7 @@
         [matDatepicker]="date1"
         placeholder="Odaberi datum"
         [value]="activityTask.FixedDate"
-        (dateChange)="setFixedData('change', $event)"
+        (dateChange)="activityTask.FixedDate = $event.value"
       />
       <mat-datepicker-toggle matSuffix [for]="date1"></mat-datepicker-toggle>
       <mat-datepicker #date1></mat-datepicker>

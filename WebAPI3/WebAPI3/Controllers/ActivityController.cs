@@ -26,19 +26,19 @@ namespace WebAPI3.Controllers
         [HttpGet(Name = "GetActivity")]
         public async Task<ActionResult<IEnumerable<Activity>>> GetActivity(int userId) //dodaj schedule na task
         {
-            var x=await _context.Activity.Include(p=>p.ActivityTask).ThenInclude(p => p.Schedule).Include(i=>i.ActivityStatus)
-                .Include(a=>a.ActivityColor).Include(e=>e.User).Where(p => p.UserId == userId).ToListAsync();
+            var x = await _context.Activity.Include(p => p.ActivityTask).ThenInclude(p => p.Schedule).Include(i => i.ActivityStatus)
+                .Include(a => a.ActivityColor).Include(e => e.User).Where(p => p.UserId == userId).ToListAsync();
 
             return x;
         }
 
         // GET: api/Activity/  ->RADI
-        [HttpGet("{activityId}",Name = "GetUserActivity")]
-        public async Task<ActionResult<Activity>> GetUserActivity(int userId,int activityId)
+        [HttpGet("{activityId}", Name = "GetUserActivity")]
+        public async Task<ActionResult<Activity>> GetUserActivity(int userId, int activityId)
         {
             System.Diagnostics.Debug.WriteLine("USOOO");
-            var x = await _context.Activity.Include(i=>i.ActivityTask).ThenInclude(p=>p.Schedule)
-                .Include(o=>o.User).Include(a=>a.ActivityStatus).Include(e=>e.ActivityColor).Include(o => o.ActivityType).Where(o=>o.User.UserId==userId && o.ActivityId==activityId).FirstOrDefaultAsync();
+            var x = await _context.Activity.Include(i => i.ActivityTask).ThenInclude(p => p.Schedule)
+                .Include(o => o.User).Include(a => a.ActivityStatus).Include(e => e.ActivityColor).Include(o => o.ActivityType).Where(o => o.User.UserId == userId && o.ActivityId == activityId).FirstOrDefaultAsync();
 
             System.Diagnostics.Debug.WriteLine(x.ActivityName);
 
@@ -81,9 +81,9 @@ namespace WebAPI3.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutActivity(int id, ActivityDto activityDto)
         {
-            
+
             var activity = _context.Activity.Include(i => i.ActivityTask).ThenInclude(p => p.Schedule)
-                .Include(o => o.User).Include(a => a.ActivityStatus).Include(e => e.ActivityColor).Where(o=>o.ActivityId == id).FirstOrDefault();
+                .Include(o => o.User).Include(a => a.ActivityStatus).Include(e => e.ActivityColor).Where(o => o.ActivityId == id).FirstOrDefault();
 
             activity.ActivityName = activityDto.ActivityName;
             activity.ActivityColorId = activityDto.ActivityColorId;
@@ -121,14 +121,14 @@ namespace WebAPI3.Controllers
         // POST: api/Activity -> RADI
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
-            /*[HttpPost]
-            public async Task<ActionResult<Activity>> PostActivity(Activity activity,[FromRoute] string userId)
-            {
-                _context.Activity.Add(activity);
-                await _context.SaveChangesAsync();
+        /*[HttpPost]
+        public async Task<ActionResult<Activity>> PostActivity(Activity activity,[FromRoute] string userId)
+        {
+            _context.Activity.Add(activity);
+            await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetUserActivity", new { userId = userId, activityId = activity.ActivityId }, activity);
-            }*/
+            return CreatedAtAction("GetUserActivity", new { userId = userId, activityId = activity.ActivityId }, activity);
+        }*/
 
         [HttpPost]
         public async Task<ActionResult<Activity>> PostActivity(ActivityDto addActivityDto, [FromRoute] string userId)
@@ -149,7 +149,7 @@ namespace WebAPI3.Controllers
             activity.User = user;
             activity.UserId = Int32.Parse(userId);
 
-            var activityStatus = _context.ActivityStatus.Where(o => o.ActivityStatusName=="NotDone").FirstOrDefault();
+            var activityStatus = _context.ActivityStatus.Where(o => o.ActivityStatusName == "NotDone").FirstOrDefault();
             activity.ActivityStatus = activityStatus;
             activity.ActivityStatusId = activityStatus.ActivityStatusId;
 
@@ -174,7 +174,7 @@ namespace WebAPI3.Controllers
             foreach (var t in z)
             {
                 var zy = _context.Schedule.Where(p => p.ActivityTaskId == t.ActivityTaskId).ToList();
-                foreach(var i in zy)
+                foreach (var i in zy)
                 {
                     _context.Schedule.Remove(i);
                 }

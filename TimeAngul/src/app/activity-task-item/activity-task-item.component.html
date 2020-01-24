@@ -1,8 +1,15 @@
 <div class="card">
   <div class="card-body task-details" *ngIf="!editing">
     <div class="task-name">
-      {{ activityTask.ActivityTaskName }}
+      <h5>      {{ activityTask.ActivityTaskName }}
+      </h5>
+      <h6>Trajanje: {{activityTask.Duration}}h</h6>
+      <h6>Obavljeno: {{activityTask.DonePercentage}}</h6>
     </div>
+    <h5 class="card-title">
+
+    </h5>
+
     <div class="task-actions">
       <button class="btn btn-secondary mr-2" (click)="edit()">
         <i class="fas fa-pencil-alt mr-2"></i> Uredi

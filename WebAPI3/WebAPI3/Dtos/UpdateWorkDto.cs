@@ -7,7 +7,7 @@ namespace WebAPI3.Dtos
 {
     public class UpdateWorkDto
     {
-        public string worked { get; set; }
+        public string workedOnTask { get; set; }
         public int timeFrom { get; set; }
         public int timeTo { get; set; }
     }

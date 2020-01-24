@@ -15,11 +15,11 @@
     class="form-control"
     id="activityType"
     name="activityType"
-    [(ngModel)]="activity.activityTypeId"
+    [(ngModel)]="activity.ActivityTypeId"
   >
     <option
       *ngFor="let activityType of activityTypes"
-      [value]="activityType.activityTypeId"
+      [ngValue]="activityType.ActivityTypeId"
       >{{ activityType.ActivityTypeName }}</option
     >
   </select>
@@ -45,7 +45,7 @@
   >
     <option
       *ngFor="let activityColor of activityColors"
-      [value]="activityColor.ActivityColorId"
+      [ngValue]="activityColor.ActivityColorId"
       >{{ activityColor.ActivityColorName }}</option
     >
   </select>

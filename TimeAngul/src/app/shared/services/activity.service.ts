@@ -29,6 +29,10 @@ export class ActivityService {
   }
 
   create(ActivityForm: ActivityForm) {
+    console.log("ovo saljem",ActivityForm);
+    ActivityForm.ActivityColorId=Number(ActivityForm.ActivityColorId);
+    ActivityForm.ActivityTypeId=Number(ActivityForm.ActivityTypeId);
+
     return this.http.post(
       `${this.baseUrl}/user/${this.userId}/Activity`,
       ActivityForm
@@ -36,6 +40,7 @@ export class ActivityService {
   }
 
   update(ActivityForm: ActivityForm) {
+    console.log("ovo saljem",ActivityForm);
     return this.http.put(
       `${this.baseUrl}/user/${this.userId}/Activity/${ActivityForm.ActivityId}`,
       ActivityForm

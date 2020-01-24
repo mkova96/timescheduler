@@ -1,14 +1,20 @@
 <div class="card activity-task" [style.border-left-color]="color">
-  <div class="activity-task-button">
+  <div class="activity-task-button" *ngIf="activityTask.ActiveSchedule">
     <a class="btn btn-light" (click)="toggleChange()">
       <i class="fas fa-pencil-alt mr-2"></i> Uredi
     </a>
   </div>
   <div class="card-body">
-    <h5 class="card-title">
+    <h5 class="card-title" *ngIf="!activityTask.ActiveSchedule">
+      {{ activityTask.ActivityTaskName }}
+      ({{ activityTask.NextOccurance.TimeFrom }}:00 -
+      {{ activityTask.NextOccurance.TimeTo }}:00)
+    </h5>
+    <h5 class="card-title" *ngIf="activityTask.ActiveSchedule">
       {{ activityTask.ActivityTaskName }}
       ({{ activityTask.ActiveSchedule.TimeFrom }}:00 -
       {{ activityTask.ActiveSchedule.TimeTo }}:00)
+
     </h5>
     <h6 class="card-subtitle mb-2 text-muted">
       Dio aktivnosti {{ activityTask.Activity.ActivityName }}

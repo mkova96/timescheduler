@@ -3,7 +3,9 @@
     <h5 class="card-title">
       {{ userActivityType.ActivityType.ActivityTypeName }}
     </h5>
-    <p class="card-text"></p>
+    <p class="card-text">
+      Preferirano vrijeme izvođenja: {{ userActivityType.TimeFrom }}:00-{{ userActivityType.TimeTo }}:00h
+    </p>
     <a
       routerLink="/activityTypes/{{
         userActivityType.ActivityType.ActivityTypeId

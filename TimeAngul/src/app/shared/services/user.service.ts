@@ -9,11 +9,11 @@ import { UserActivityType } from "../models/user-activity-type";
 import { ActivityType } from "../models/activity-type";
 import { ActivityTypeAddComponent } from "src/app/activity-type-add/activity-type-add.component";
 
-// const httpOptions = {
-//   headers: new HttpHeaders({
-//     'Authorization': 'Bearer ' + localStorage.getItem('token')
-//   })
-// };
+ const httpOptions = {
+  headers: new HttpHeaders({
+    'Authorization': 'Bearer ' + localStorage.getItem('token')
+  })
+};
 
 @Injectable({
   providedIn: "root"
@@ -29,6 +29,8 @@ export class UserService {
 
   activityType: ActivityType;
   activityTypes: ActivityType[] = [];
+
+  activities2:Activity[]=[];
 
   constructor(private http: HttpClient) {}
 
@@ -81,26 +83,35 @@ export class UserService {
     return this.activity;
   }
 
-  async getAllUserActivityTypes(id) {
-    /*RADI*/
+  getAllUserActivityTypes(id) { /*RADI*/
 
-    const userActivityTypes = await this.http
-      .get<UserActivityType[]>(this.baseUrl + "/user/" + id + "/activityType")
-      .toPromise();
 
-    console.log(userActivityTypes);
+    this.http.get<UserActivityType[]>(this.baseUrl + '/user/' + id+'/activityType', httpOptions).subscribe(a => this.userActivityTypes = a);
+    this.userActivityTypes.forEach(element => {
+      let actType:ActivityType;
 
-    userActivityTypes.forEach(async (element, index) => {
-      userActivityTypes[index].ActivityType = await this.http
-        .get<ActivityType>(
-          this.baseUrl + "/activityType/" + element.ActivityTypeId
-        )
-        .toPromise();
+
+      this.http.get<ActivityType>(this.baseUrl + '/user/'+id+'/activityType/' + element.ActivityTypeId, httpOptions).subscribe(a => this.activityTypes.push(a));
     });
-    console.log(userActivityTypes);
 
-    return userActivityTypes;
+    for (var i=0;i<this.userActivityTypes.length;++i){
+      this.userActivityTypes[i].ActivityType=this.activityTypes[i];
+    }
+    this.userActivityTypes.forEach(element => {
+      this.http.get<Activity[]>(this.baseUrl + '/user/'+id+'/activityByType/'+element.ActivityTypeId, httpOptions).subscribe(a =>element.ActivityType.Activity=a);
+    });
+
+    this.userActivityTypes.forEach(element => {
+      element.ActivityType.Activity.filter(function(value, index, arr){
+
+        return value.ActivityTypeId===element.ActivityTypeId;
+    
+    });
+    });
+    return this.userActivityTypes;
   }
+
+
 
   getUserActivityTypes(id1, id2) {
     console.log("dobio sam:" + id1);
